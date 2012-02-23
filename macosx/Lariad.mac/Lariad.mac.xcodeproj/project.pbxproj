@@ -1,0 +1,523 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4B8736FF14F2733A0097411F /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = 4B8735D014F2733A0097411F /* CHANGELOG */; };
+		4B87370014F2733A0097411F /* config.lua in Resources */ = {isa = PBXBuildFile; fileRef = 4B8735D114F2733A0097411F /* config.lua */; };
+		4B87370114F2733A0097411F /* eapi.lua in Resources */ = {isa = PBXBuildFile; fileRef = 4B8735D214F2733A0097411F /* eapi.lua */; };
+		4B87370214F2733A0097411F /* image in Resources */ = {isa = PBXBuildFile; fileRef = 4B8735D314F2733A0097411F /* image */; };
+		4B87370314F2733A0097411F /* README-SDL_image.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4B87365014F2733A0097411F /* README-SDL_image.txt */; };
+		4B87370414F2733A0097411F /* README-SDL_mixer.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4B87365114F2733A0097411F /* README-SDL_mixer.txt */; };
+		4B87370514F2733A0097411F /* README-SDL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4B87365214F2733A0097411F /* README-SDL.txt */; };
+		4B87370614F2733A0097411F /* script in Resources */ = {isa = PBXBuildFile; fileRef = 4B87365314F2733A0097411F /* script */; };
+		4B87370714F2733A0097411F /* sound in Resources */ = {isa = PBXBuildFile; fileRef = 4B8736B414F2733A0097411F /* sound */; };
+		4BB672B814EF0F1D005FA745 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672B714EF0F1D005FA745 /* SDLMain.m */; };
+		4BB672E214EF0F43005FA745 /* audio.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672B914EF0F43005FA745 /* audio.c */; };
+		4BB672E314EF0F43005FA745 /* body.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672BB14EF0F43005FA745 /* body.c */; };
+		4BB672E414EF0F43005FA745 /* config.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672BE14EF0F43005FA745 /* config.c */; };
+		4BB672E514EF0F43005FA745 /* draw.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672C114EF0F43005FA745 /* draw.c */; };
+		4BB672E614EF0F43005FA745 /* eapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672C314EF0F43005FA745 /* eapi.c */; };
+		4BB672E714EF0F43005FA745 /* framebuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672C414EF0F43005FA745 /* framebuffer.c */; };
+		4BB672E814EF0F43005FA745 /* game2d.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672C514EF0F43005FA745 /* game2d.c */; };
+		4BB672E914EF0F43005FA745 /* geometry.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672C714EF0F43005FA745 /* geometry.c */; };
+		4BB672EA14EF0F43005FA745 /* getopt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672C914EF0F43005FA745 /* getopt.c */; };
+		4BB672EB14EF0F43005FA745 /* log.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672CA14EF0F43005FA745 /* log.c */; };
+		4BB672EC14EF0F43005FA745 /* lua_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672CC14EF0F43005FA745 /* lua_util.c */; };
+		4BB672ED14EF0F43005FA745 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672CE14EF0F43005FA745 /* main.c */; };
+		4BB672EE14EF0F43005FA745 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672CF14EF0F43005FA745 /* matrix.c */; };
+		4BB672EF14EF0F43005FA745 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672D114EF0F43005FA745 /* mem.c */; };
+		4BB672F014EF0F43005FA745 /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672D314EF0F43005FA745 /* misc.c */; };
+		4BB672F114EF0F43005FA745 /* path.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672D514EF0F43005FA745 /* path.c */; };
+		4BB672F214EF0F43005FA745 /* physics.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672D714EF0F43005FA745 /* physics.c */; };
+		4BB672F314EF0F43005FA745 /* qtree.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672D914EF0F43005FA745 /* qtree.c */; };
+		4BB672F414EF0F43005FA745 /* str.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672DB14EF0F43005FA745 /* str.c */; };
+		4BB672F514EF0F43005FA745 /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672E014EF0F43005FA745 /* world.c */; };
+		4BB672F914EF0F7B005FA745 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB672F814EF0F7B005FA745 /* SDL_image.framework */; };
+		4BB672FB14EF0F7B005FA745 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB672FA14EF0F7B005FA745 /* SDL_mixer.framework */; };
+		4BB672FD14EF0F7B005FA745 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB672FC14EF0F7B005FA745 /* SDL.framework */; };
+		4BB6732A14EF11BE005FA745 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB6732914EF11BE005FA745 /* OpenGL.framework */; };
+		4BB673D214EF1635005FA745 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB673D114EF1635005FA745 /* liblua.a */; };
+		4BB673FC14EF1A90005FA745 /* SDL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB672FC14EF0F7B005FA745 /* SDL.framework */; };
+		4BB673FD14EF1A93005FA745 /* SDL_mixer.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB672FA14EF0F7B005FA745 /* SDL_mixer.framework */; };
+		4BB673FE14EF1A95005FA745 /* SDL_image.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB672F814EF0F7B005FA745 /* SDL_image.framework */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4BB673FB14EF1A82005FA745 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4BB673FE14EF1A95005FA745 /* SDL_image.framework in CopyFiles */,
+				4BB673FD14EF1A93005FA745 /* SDL_mixer.framework in CopyFiles */,
+				4BB673FC14EF1A90005FA745 /* SDL.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		256AC3F00F4B6AF500CF3369 /* Lariad_mac_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lariad_mac_Prefix.pch; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4B8735D014F2733A0097411F /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CHANGELOG; path = ../../lariad/CHANGELOG; sourceTree = SOURCE_ROOT; };
+		4B8735D114F2733A0097411F /* config.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.lua; path = ../../lariad/config.lua; sourceTree = SOURCE_ROOT; };
+		4B8735D214F2733A0097411F /* eapi.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = eapi.lua; path = ../../lariad/eapi.lua; sourceTree = SOURCE_ROOT; };
+		4B8735D314F2733A0097411F /* image */ = {isa = PBXFileReference; lastKnownFileType = folder; name = image; path = ../../lariad/image; sourceTree = SOURCE_ROOT; };
+		4B87365014F2733A0097411F /* README-SDL_image.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "README-SDL_image.txt"; path = "../../lariad/README-SDL_image.txt"; sourceTree = SOURCE_ROOT; };
+		4B87365114F2733A0097411F /* README-SDL_mixer.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "README-SDL_mixer.txt"; path = "../../lariad/README-SDL_mixer.txt"; sourceTree = SOURCE_ROOT; };
+		4B87365214F2733A0097411F /* README-SDL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "README-SDL.txt"; path = "../../lariad/README-SDL.txt"; sourceTree = SOURCE_ROOT; };
+		4B87365314F2733A0097411F /* script */ = {isa = PBXFileReference; lastKnownFileType = folder; name = script; path = ../../lariad/script; sourceTree = SOURCE_ROOT; };
+		4B8736B414F2733A0097411F /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sound; path = ../../lariad/sound; sourceTree = SOURCE_ROOT; };
+		4BB672B614EF0F1D005FA745 /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
+		4BB672B714EF0F1D005FA745 /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
+		4BB672B914EF0F43005FA745 /* audio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = audio.c; path = ../../src/audio.c; sourceTree = SOURCE_ROOT; };
+		4BB672BA14EF0F43005FA745 /* audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = audio.h; path = ../../src/audio.h; sourceTree = SOURCE_ROOT; };
+		4BB672BB14EF0F43005FA745 /* body.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = body.c; path = ../../src/body.c; sourceTree = SOURCE_ROOT; };
+		4BB672BC14EF0F43005FA745 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = ../../src/common.h; sourceTree = SOURCE_ROOT; };
+		4BB672BD14EF0F43005FA745 /* compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = compat.h; path = ../../src/compat.h; sourceTree = SOURCE_ROOT; };
+		4BB672BE14EF0F43005FA745 /* config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = config.c; path = ../../src/config.c; sourceTree = SOURCE_ROOT; };
+		4BB672BF14EF0F43005FA745 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = ../../src/config.h; sourceTree = SOURCE_ROOT; };
+		4BB672C014EF0F43005FA745 /* console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = console.h; path = ../../src/console.h; sourceTree = SOURCE_ROOT; };
+		4BB672C114EF0F43005FA745 /* draw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = draw.c; path = ../../src/draw.c; sourceTree = SOURCE_ROOT; };
+		4BB672C214EF0F43005FA745 /* draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = draw.h; path = ../../src/draw.h; sourceTree = SOURCE_ROOT; };
+		4BB672C314EF0F43005FA745 /* eapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = eapi.c; path = ../../src/eapi.c; sourceTree = SOURCE_ROOT; };
+		4BB672C414EF0F43005FA745 /* framebuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = framebuffer.c; path = ../../src/framebuffer.c; sourceTree = SOURCE_ROOT; };
+		4BB672C514EF0F43005FA745 /* game2d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = game2d.c; path = ../../src/game2d.c; sourceTree = SOURCE_ROOT; };
+		4BB672C614EF0F43005FA745 /* game2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = game2d.h; path = ../../src/game2d.h; sourceTree = SOURCE_ROOT; };
+		4BB672C714EF0F43005FA745 /* geometry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = geometry.c; path = ../../src/geometry.c; sourceTree = SOURCE_ROOT; };
+		4BB672C814EF0F43005FA745 /* geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geometry.h; path = ../../src/geometry.h; sourceTree = SOURCE_ROOT; };
+		4BB672C914EF0F43005FA745 /* getopt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = getopt.c; path = ../../src/getopt.c; sourceTree = SOURCE_ROOT; };
+		4BB672CA14EF0F43005FA745 /* log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = log.c; path = ../../src/log.c; sourceTree = SOURCE_ROOT; };
+		4BB672CB14EF0F43005FA745 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = log.h; path = ../../src/log.h; sourceTree = SOURCE_ROOT; };
+		4BB672CC14EF0F43005FA745 /* lua_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lua_util.c; path = ../../src/lua_util.c; sourceTree = SOURCE_ROOT; };
+		4BB672CD14EF0F43005FA745 /* lua_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lua_util.h; path = ../../src/lua_util.h; sourceTree = SOURCE_ROOT; };
+		4BB672CE14EF0F43005FA745 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../../src/main.c; sourceTree = SOURCE_ROOT; };
+		4BB672CF14EF0F43005FA745 /* matrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = matrix.c; path = ../../src/matrix.c; sourceTree = SOURCE_ROOT; };
+		4BB672D014EF0F43005FA745 /* matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matrix.h; path = ../../src/matrix.h; sourceTree = SOURCE_ROOT; };
+		4BB672D114EF0F43005FA745 /* mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mem.c; path = ../../src/mem.c; sourceTree = SOURCE_ROOT; };
+		4BB672D214EF0F43005FA745 /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem.h; path = ../../src/mem.h; sourceTree = SOURCE_ROOT; };
+		4BB672D314EF0F43005FA745 /* misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = misc.c; path = ../../src/misc.c; sourceTree = SOURCE_ROOT; };
+		4BB672D414EF0F43005FA745 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = misc.h; path = ../../src/misc.h; sourceTree = SOURCE_ROOT; };
+		4BB672D514EF0F43005FA745 /* path.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = path.c; path = ../../src/path.c; sourceTree = SOURCE_ROOT; };
+		4BB672D614EF0F43005FA745 /* path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = path.h; path = ../../src/path.h; sourceTree = SOURCE_ROOT; };
+		4BB672D714EF0F43005FA745 /* physics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = physics.c; path = ../../src/physics.c; sourceTree = SOURCE_ROOT; };
+		4BB672D814EF0F43005FA745 /* physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = physics.h; path = ../../src/physics.h; sourceTree = SOURCE_ROOT; };
+		4BB672D914EF0F43005FA745 /* qtree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = qtree.c; path = ../../src/qtree.c; sourceTree = SOURCE_ROOT; };
+		4BB672DA14EF0F43005FA745 /* qtree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qtree.h; path = ../../src/qtree.h; sourceTree = SOURCE_ROOT; };
+		4BB672DB14EF0F43005FA745 /* str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = str.c; path = ../../src/str.c; sourceTree = SOURCE_ROOT; };
+		4BB672DC14EF0F43005FA745 /* str.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = str.h; path = ../../src/str.h; sourceTree = SOURCE_ROOT; };
+		4BB672DD14EF0F43005FA745 /* uthash_tuned.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uthash_tuned.h; path = ../../src/uthash_tuned.h; sourceTree = SOURCE_ROOT; };
+		4BB672DE14EF0F43005FA745 /* uthash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uthash.h; path = ../../src/uthash.h; sourceTree = SOURCE_ROOT; };
+		4BB672DF14EF0F43005FA745 /* utlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utlist.h; path = ../../src/utlist.h; sourceTree = SOURCE_ROOT; };
+		4BB672E014EF0F43005FA745 /* world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = world.c; path = ../../src/world.c; sourceTree = SOURCE_ROOT; };
+		4BB672E114EF0F43005FA745 /* world.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = world.h; path = ../../src/world.h; sourceTree = SOURCE_ROOT; };
+		4BB672F814EF0F7B005FA745 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_image.framework"; sourceTree = "<absolute>"; };
+		4BB672FA14EF0F7B005FA745 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_mixer.framework"; sourceTree = "<absolute>"; };
+		4BB672FC14EF0F7B005FA745 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL.framework"; sourceTree = "<absolute>"; };
+		4BB6732914EF11BE005FA745 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		4BB673D114EF1635005FA745 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = "../../lua-5.1/src/liblua.a"; sourceTree = SOURCE_ROOT; };
+		8D1107310486CEB800E47090 /* Lariad_mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Lariad_mac-Info.plist"; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* Lariad.mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lariad.mac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				4BB672F914EF0F7B005FA745 /* SDL_image.framework in Frameworks */,
+				4BB672FB14EF0F7B005FA745 /* SDL_mixer.framework in Frameworks */,
+				4BB672FD14EF0F7B005FA745 /* SDL.framework in Frameworks */,
+				4BB6732A14EF11BE005FA745 /* OpenGL.framework in Frameworks */,
+				4BB673D214EF1635005FA745 /* liblua.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				4BB6732914EF11BE005FA745 /* OpenGL.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+				4BB672F814EF0F7B005FA745 /* SDL_image.framework */,
+				4BB672FA14EF0F7B005FA745 /* SDL_mixer.framework */,
+				4BB672FC14EF0F7B005FA745 /* SDL.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* Lariad.mac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* Lariad.mac */ = {
+			isa = PBXGroup;
+			children = (
+				4BB6754014EF223F005FA745 /* Data */,
+				29B97315FDCFA39411CA2CEA /* Lariad */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = Lariad.mac;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Lariad */ = {
+			isa = PBXGroup;
+			children = (
+				4BB672B914EF0F43005FA745 /* audio.c */,
+				4BB672BA14EF0F43005FA745 /* audio.h */,
+				4BB672BB14EF0F43005FA745 /* body.c */,
+				4BB672BC14EF0F43005FA745 /* common.h */,
+				4BB672BD14EF0F43005FA745 /* compat.h */,
+				4BB672BE14EF0F43005FA745 /* config.c */,
+				4BB672BF14EF0F43005FA745 /* config.h */,
+				4BB672C014EF0F43005FA745 /* console.h */,
+				4BB672C114EF0F43005FA745 /* draw.c */,
+				4BB672C214EF0F43005FA745 /* draw.h */,
+				4BB672C314EF0F43005FA745 /* eapi.c */,
+				4BB672C414EF0F43005FA745 /* framebuffer.c */,
+				4BB672C514EF0F43005FA745 /* game2d.c */,
+				4BB672C614EF0F43005FA745 /* game2d.h */,
+				4BB672C714EF0F43005FA745 /* geometry.c */,
+				4BB672C814EF0F43005FA745 /* geometry.h */,
+				4BB672C914EF0F43005FA745 /* getopt.c */,
+				4BB672CA14EF0F43005FA745 /* log.c */,
+				4BB672CB14EF0F43005FA745 /* log.h */,
+				4BB672CC14EF0F43005FA745 /* lua_util.c */,
+				4BB672CD14EF0F43005FA745 /* lua_util.h */,
+				4BB672CE14EF0F43005FA745 /* main.c */,
+				4BB672CF14EF0F43005FA745 /* matrix.c */,
+				4BB672D014EF0F43005FA745 /* matrix.h */,
+				4BB672D114EF0F43005FA745 /* mem.c */,
+				4BB672D214EF0F43005FA745 /* mem.h */,
+				4BB672D314EF0F43005FA745 /* misc.c */,
+				4BB672D414EF0F43005FA745 /* misc.h */,
+				4BB672D514EF0F43005FA745 /* path.c */,
+				4BB672D614EF0F43005FA745 /* path.h */,
+				4BB672D714EF0F43005FA745 /* physics.c */,
+				4BB672D814EF0F43005FA745 /* physics.h */,
+				4BB672D914EF0F43005FA745 /* qtree.c */,
+				4BB672DA14EF0F43005FA745 /* qtree.h */,
+				4BB672DB14EF0F43005FA745 /* str.c */,
+				4BB672DC14EF0F43005FA745 /* str.h */,
+				4BB672DD14EF0F43005FA745 /* uthash_tuned.h */,
+				4BB672DE14EF0F43005FA745 /* uthash.h */,
+				4BB672DF14EF0F43005FA745 /* utlist.h */,
+				4BB672E014EF0F43005FA745 /* world.c */,
+				4BB672E114EF0F43005FA745 /* world.h */,
+				4BB672B614EF0F1D005FA745 /* SDLMain.h */,
+				4BB672B714EF0F1D005FA745 /* SDLMain.m */,
+				256AC3F00F4B6AF500CF3369 /* Lariad_mac_Prefix.pch */,
+			);
+			name = Lariad;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107310486CEB800E47090 /* Lariad_mac-Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4BB673D114EF1635005FA745 /* liblua.a */,
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4BB6754014EF223F005FA745 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				4B8735D014F2733A0097411F /* CHANGELOG */,
+				4B8735D114F2733A0097411F /* config.lua */,
+				4B8735D214F2733A0097411F /* eapi.lua */,
+				4B8735D314F2733A0097411F /* image */,
+				4B87365014F2733A0097411F /* README-SDL_image.txt */,
+				4B87365114F2733A0097411F /* README-SDL_mixer.txt */,
+				4B87365214F2733A0097411F /* README-SDL.txt */,
+				4B87365314F2733A0097411F /* script */,
+				4B8736B414F2733A0097411F /* sound */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* Lariad.mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Lariad.mac" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+				4BB673FB14EF1A82005FA745 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Lariad.mac;
+			productInstallPath = "$(HOME)/Applications";
+			productName = Lariad.mac;
+			productReference = 8D1107320486CEB800E47090 /* Lariad.mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Lariad.mac" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* Lariad.mac */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* Lariad.mac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				4B8736FF14F2733A0097411F /* CHANGELOG in Resources */,
+				4B87370014F2733A0097411F /* config.lua in Resources */,
+				4B87370114F2733A0097411F /* eapi.lua in Resources */,
+				4B87370214F2733A0097411F /* image in Resources */,
+				4B87370314F2733A0097411F /* README-SDL_image.txt in Resources */,
+				4B87370414F2733A0097411F /* README-SDL_mixer.txt in Resources */,
+				4B87370514F2733A0097411F /* README-SDL.txt in Resources */,
+				4B87370614F2733A0097411F /* script in Resources */,
+				4B87370714F2733A0097411F /* sound in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BB672B814EF0F1D005FA745 /* SDLMain.m in Sources */,
+				4BB672E214EF0F43005FA745 /* audio.c in Sources */,
+				4BB672E314EF0F43005FA745 /* body.c in Sources */,
+				4BB672E414EF0F43005FA745 /* config.c in Sources */,
+				4BB672E514EF0F43005FA745 /* draw.c in Sources */,
+				4BB672E614EF0F43005FA745 /* eapi.c in Sources */,
+				4BB672E714EF0F43005FA745 /* framebuffer.c in Sources */,
+				4BB672E814EF0F43005FA745 /* game2d.c in Sources */,
+				4BB672E914EF0F43005FA745 /* geometry.c in Sources */,
+				4BB672EA14EF0F43005FA745 /* getopt.c in Sources */,
+				4BB672EB14EF0F43005FA745 /* log.c in Sources */,
+				4BB672EC14EF0F43005FA745 /* lua_util.c in Sources */,
+				4BB672ED14EF0F43005FA745 /* main.c in Sources */,
+				4BB672EE14EF0F43005FA745 /* matrix.c in Sources */,
+				4BB672EF14EF0F43005FA745 /* mem.c in Sources */,
+				4BB672F014EF0F43005FA745 /* misc.c in Sources */,
+				4BB672F114EF0F43005FA745 /* path.c in Sources */,
+				4BB672F214EF0F43005FA745 /* physics.c in Sources */,
+				4BB672F314EF0F43005FA745 /* qtree.c in Sources */,
+				4BB672F414EF0F43005FA745 /* str.c in Sources */,
+				4BB672F514EF0F43005FA745 /* world.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Lariad_mac_Prefix.pch;
+				INFOPLIST_FILE = "Lariad_mac-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../lua-5.1/src\"",
+				);
+				PRODUCT_NAME = Lariad.mac;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../frameworks\"",
+				);
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Lariad_mac_Prefix.pch;
+				INFOPLIST_FILE = "Lariad_mac-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../lua-5.1/src\"",
+				);
+				PRODUCT_NAME = Lariad.mac;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_image.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_mixer.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/lua-5.1/src",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks ";
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_image.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_mixer.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/lua-5.1/src",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks ";
+				OTHER_CFLAGS = "-DNDEBUG";
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Lariad.mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Lariad.mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

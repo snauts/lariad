@@ -1,0 +1,14 @@
+Atis:
+
+* Just like FPS, output other things like "number of visible tiles",
+  "number of collisions considered", "number of collision handlers executed"
+  etc etc
+  Also do this engine side, since scripts shouldn't bother with this stuff.
+  In fact, having a GetFPS function is probably unnecessary.
+* Shatter slow-down bug.
+* Path/curve object for NPC/platform/etc movement and perhaps much more
+* Engine doc: intro+examples most importantly
+* Vertex buffer objects.
+
+Arturs:
+

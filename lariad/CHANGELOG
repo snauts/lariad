@@ -1,0 +1,96 @@
+What's new in 1.0.1:
+
+*) snow leopard port;
+*) optimize fireballs;
+*) fix linking on arch linux;
+
+What's new in 1.0:
+
+*) add sound to menu navigation;
+*) add crushing sound when bosses die;
+*) put checkpoint near spider boss (in easy mode);
+*) put health dispenser in waterfall level (in easy mode);
+*) fix camera movement when player stands on waterfall platform;
+*) charlie tells lots of stuff about affairs in Rock world;
+*) gisaku tells about possible location of the birds;
+*) fix diesel engine switch-off notification sticking;
+*) fix disappearing sound problem;
+*) rename difficulty levels;
+
+What's new in 0.9:
+
+*) fix wasp boss safe spot;
+*) fix last boss safe spot;
+*) fix spider boss safe spot;
+*) fix ducking in midair glitch;
+
+What's new in 0.8:
+
+*) fix waterfall platform depth;
+*) add mario style jumping sprite;
+*) save death state of lesser mobs;
+*) add nice icon to application .exe file; 
+*) fix mouse cursor stucking while alt-tabing in windows;
+*) remove mouse cursor stucking on windows/macosx;
+   (dedicated to Grunnt@forums.indiegamer.com)
+
+What's new in 0.7:
+
+*) tutorial messages can be repeated;
+*) remove traveling hints in hard mode;
+*) add tutorial hint that player can shoot upwards;
+*) fix some memory leaks that caused industrial fireball row lag
+   (dedicated to austere@forums.gamedev.lv);
+
+What's new in 0.6:
+
+*) increase jump distance;
+*) smallest ponds are non-lethal;
+*) fix industrial tram initial positions;
+*) remove rightmost swamp spider (in easy mode);
+*) remove second seed spitting plant (in easy mode);
+*) put checkpoint to the right of wasp queen (in easy mode);
+*) restored final destination marker on navigation console;
+*) reverse reed hut so that player faces right after waking up;
+   (dedicated to Pallav Nawani@forums.indiegamer.com);    
+*) preload sounds to avoid lags (dedicated to krauklis@forums.gamedev.lv);
+*) squeeze swamp moss and waterfall grass when player steps on it;
+*) remove training stage; put tutorials in-game
+   (dedicated to me_36@forums.indiegamer.com);
+
+What's new in 0.5:
+
+*) removed engineering bay (because it is useless);
+*) put cargo hold with save-point near spaceship exit;
+*) slow down swamp parallax (dedicated to moi@forums.tigsource.com);
+*) disable traveling to industrial, rock and forest worlds without gun;
+*) added gamepad/joystick support (dedicated to container_2000@reddit.com); 
+*) added "easy" difficulty level, player starts game with 3 lives;
+*) added control configuration menu;
+*) added small intro sequence;
+*) added toolbox sound;
+
+What's new in 0.4:
+
+*) fix quitting crash/hang (dedicated to container_2000@reddit.com);
+
+What's new in 0.3:
+
+*) if save game is absent, then give option to restart game, after dying;
+*) launch button - hopefully this will make traveling less ambiguous;
+*) show long travel cutscene only first time player is traveling;
+*) paint AYBABTU message on swamp message board;
+*) small tutorial that introduces game controls;
+*) fix waterfall drops flying sideways;
+*) raise swamp pond stumps higher;
+*) engrish translation;
+*) language switcher;
+
+What's new in 0.2:
+
+*) use -w flag to switch to windowed mode;
+*) fix crash when using spaceship console;
+
+What's new in 0.1:
+
+*) everything;

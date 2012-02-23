@@ -1,0 +1,38 @@
+game.GetState().spaceShipLandedOn = "Forest"
+
+game.GetState().lives = 7
+game.GetState().maxLives = 10
+
+-- game.GetState().toolbox = true
+-- game.GetState().boulderCutscene = true
+
+-- util.GoToAndPlace("test", mainPC, {80,-68}, true)
+-- util.GoToAndPlace("ReedHouse", mainPC, {80,-68}, true)
+-- util.GoToAndPlace("swamp-map", mainPC, {16700,219}, true)
+
+-- util.GoToAndPlace("EngineeringBay", mainPC, {-350,-180}, true)
+-- util.GoToAndPlace("EngineRoom", mainPC, {0,-180}, true)
+-- util.GoToAndPlace("CargoHold", mainPC, {0,-180}, true)
+-- util.GoToAndPlace("CommandBridge", mainPC, {0,-180}, true)
+
+-- util.GoToAndPlace("Waterfall", mainPC, {-1200, -2500}, true)
+-- util.GoToAndPlace("SideCave", mainPC, {264,731}, true)
+-- util.GoToAndPlace("DarkCave", mainPC, {6000, 0}, true)
+
+-- util.GoToAndPlace("Rocks", mainPC, {-10100,2500}, true)
+-- util.GoToAndPlace("Rocks", mainPC, {10500,0}, true)
+-- util.GoToAndPlace("Pyramid", mainPC, {-6800,200}, true)
+-- util.GoToAndPlace("Pyramid", mainPC, {-3600,-1600}, true)
+
+ util.GoToAndPlace("Forest", mainPC, {-4583, 15}, true)
+-- util.GoToAndPlace("Forest", mainPC, {4800, 1250}, true)
+-- util.GoToAndPlace("Mine2", mainPC, {6000, 380}, true)
+-- util.GoToAndPlace("Mine1", mainPC, {-3800, -2700}, true)
+-- util.GoToAndPlace("Mine1", mainPC, {-4000, -2700}, true)
+
+-- util.GoToAndPlace("Industrial", mainPC, {4500, 0}, true)
+-- util.GoToAndPlace("Industrial", mainPC, {6200, 0}, true)
+
+ game.GetState().hasSterling = true
+ game.GetState().weaponInUse = "image/sterling.png"
+ destroyer.UseWeapon(mainPC)
