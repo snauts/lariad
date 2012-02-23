@@ -4,10 +4,10 @@ local eapi = eapi or { }
 
 Cfg = {
         name = "Lariad",
-	version = "0.4",
+	version = "1.0.1",
 
 	-- Display.
-	fullscreen	= false,
+	fullscreen	= true,
 	windowWidth	= 800,
 	windowHeight	= 480,
 	screenBPP	= 0,		-- 0 = current bits per pixel.
@@ -18,19 +18,9 @@ Cfg = {
 	chunksize	= 512,		-- Less is slower but more accurate.
 	stereo		= true,		-- Mono or stereo output.
 
-	-- Editor.
-	loadEditor		= true,
-	defaultShapeColor	= {r=0.0, g=0.8, b=0.4},
-	selectedShapeColor	= {r=0.9, g=0,   b=0.5},
-	invalidShapeColor	= {r=0.8, g=0.4, b=0.1},
-
 	-- Debug things.
 	forceNative	= true,
-	screenWidth	= 800,
-	screenHeight	= 480,
-	printExtensions = false,	-- Print the OpenGL extension string.
-	FPSUpdateInterval = 500,	-- FPS update interval in milliseconds.
-	gameSpeed = 0,			-- Negative values slow the game down,
+	gameSpeed	= 0,		-- Negative values slow the game down,
 					-- positive values speed it up.
 
 	keyLeft  = { eapi.KEY_LEFT, eapi.JOY_BUTTON_15, eapi.JOY_AXIS0_MINUS },
@@ -44,16 +34,5 @@ Cfg = {
 	texts	 = "script/Texts.en.lua",
 	startLives = 3,
 }
-
--- Make sure the configuration is sane.
-assert(Cfg.screenWidth >= 200 and Cfg.screenHeight >= 120)
-
-assert(Cfg.channels > 0 and Cfg.channels <= 16)
-assert(Cfg.frequency == 22050 or Cfg.frequency == 44100)
-assert(Cfg.stereo == true or Cfg.stereo == false)
-assert(Cfg.chunksize >= 256 and Cfg.chunksize <= 8192)
-
-assert(Cfg.FPSUpdateInterval > 0);
-assert(Cfg.gameSpeed >= -10 and Cfg.gameSpeed <= 10)
 
 return Cfg
