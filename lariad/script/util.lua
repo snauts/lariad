@@ -830,14 +830,14 @@ end
 local Message = nil
 
 local music = nil
-local contiuneMusic = nil
+local continueMusic = nil
 local function StopMusic(timeout)
 	eapi.FadeMusic(timeout or 0.5)
 	music = nil
 end
 
 local function ContinueMusic(fileName, volume)
-	contiuneMusic = fileName
+	continueMusic = fileName
 	eapi.SetMusicVolume(volume)
 end
 
@@ -878,12 +878,12 @@ local function GoTo(roomName, TransitionFunc, disableESCAPE, fadeEffect)
 
 	effects.Init()
 	weapons.Init()
-	contiuneMusic = nil
+	continueMusic = nil
 	
 	dofile("script/" .. roomName .. ".lua")
 	dofile("script/ProgressBar.lua")
 
-	if not(music == contiuneMusic) then
+	if not(music == continueMusic) then
 		StopMusic()
 	end
 	if TransitionFunc then

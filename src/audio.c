@@ -172,7 +172,7 @@ music_free(Music *music)
 }
 
 /*
- * Free memory of those sounds and music that have not been used in a while.
+ * Free memory of those sounds that have not been used in a while.
  */
 void
 audio_free_unused()
@@ -184,7 +184,14 @@ audio_free_unused()
                         sound_free(snd);
                 }
         }
-        
+}
+
+/*
+ * Remove music from memory that has not been played recently.
+ */
+static void
+free_unused_music(void)
+{
         Music *music, *music_tmp;
         HASH_ITER(hh, music_hash, music, music_tmp) {
                 if (--music->usage < 1) {
@@ -515,15 +522,17 @@ audio_music_play(const char *name, int volume, int loops, int fade_in, double po
         assert(loops >= 0);
         assert(volume >= 0 && volume <= MIX_MAX_VOLUME);
         assert(name && *name && fade_in >= 0 && pos >= 0.0);
-        
-        if (loops == 0)
-                loops = -1;
-        
+                
         Music *music = music_lookup_or_create(name);
         Mix_VolumeMusic(volume);
         Mix_RewindMusic();
         
+        if (loops == 0)
+                loops = -1;        
         Mix_FadeInMusicPos(music->mix_music, loops, fade_in, pos);
+        
+        /* Clear unused music from memory. */
+        free_unused_music();
 }
 
 void
