@@ -9,7 +9,28 @@
 #include "physics.h"
 #include "uthash.h"
 
+static mem_pool mp_sound, mp_music;
+
+/* Determines how long unused sounds stay in memory. */
+#define SOUND_HISTORY   3
+#define MUSIC_HISTORY   5
+
+typedef struct {
+        Mix_Chunk       *sample;
+        char            name[100];      /* name = hash key. */
+        int             usage;          /* Determines how long ago sound was last used. */
+        UT_hash_handle  hh;             /* Makes this struct hashable. */
+} Sound;
+
+typedef struct {
+        Mix_Music	*mix_music;
+        char		name[100];
+        int		usage;
+        UT_hash_handle	hh;
+} Music;
+
 static Sound    *sound_hash;    /* Keep recently used sounds samples here. */
+static Music    *music_hash;    /* Keep recently used music here. */
 
 static int      have_audio;     /* True if audio init was successful. */
 
@@ -49,63 +70,15 @@ static struct {
 } channels[16];
 
 /*
- * Free resources held within Sound structure, then free the structure memory
- * itself.
- */
-static void
-sound_free(Sound *snd)
-{
-        assert(snd != NULL);
-
-        log_msg("Deleting sound '%s'.", snd->name);
-        Mix_FreeChunk(snd->sample);
-        memset(snd, 0, sizeof(*snd));
-
-        extern mem_pool mp_sound;
-        mp_free(&mp_sound, snd);
-}
-
-/*
- * Release all memory used by sounds.
- */
-void
-sound_free_all()
-{
-        Sound *snd;
-        
-        while (sound_hash) {
-                snd = sound_hash;
-                HASH_DEL(sound_hash, snd);
-                sound_free(snd);
-        }
-}
-
-/*
- * Free memory of those sounds that have not been used in a while.
- */
-void
-sound_free_unused()
-{
-        Sound *snd, *tmp;
-        
-        HASH_ITER(hh, sound_hash, snd, tmp) {
-                if (--snd->usage < 1) {
-                        HASH_DEL(sound_hash, snd);
-                        sound_free(snd);
-                }
-        }
-}
-
-/*
- * Look up sound object by name in the global sound_hash. If it's not there,
+ * Look up sound object by name in the global hash. If it's not there,
  * create a new sound.
  *
  * name         Sound filename.
  */
-Sound *
+static Sound *
 sound_lookup_or_create(const char *name)
 {
-        /* See if a sound with this name already exists. */
+        /* See if structure with this name already exists. */
         Sound *snd;
         HASH_FIND_STR(sound_hash, name, snd);
         if (snd != NULL) {
@@ -115,23 +88,110 @@ sound_lookup_or_create(const char *name)
         }
         
         /* A new sound. */
-        extern mem_pool mp_sound;
         snd = mp_alloc(&mp_sound);
         memset(snd, 0, sizeof(*snd));
         assert(strlen(name) < sizeof(snd->name));
         strcpy(snd->name, name);
         
-        log_msg("Loading '%s' into sound memory.", name);
+        log_msg("Loading `%s` into sound memory.", name);
         snd->sample = Mix_LoadWAV(name);
         if (snd->sample == NULL)
                 fatal_error("Could not load sound: %s.", Mix_GetError());
         
-        /* Mark sound as being recently used. */
+        /* Mark as recently used. */
         snd->usage = SOUND_HISTORY;
         
-        /* Add sound to global hash which is indexed by sound name. */
+        /* Add to global hash which is indexed by name. */
         HASH_ADD_STR(sound_hash, name, snd);
         return snd;
+}
+
+/*
+ * Look up music object by name in the global hash. If it's not there,
+ * create new music.
+ *
+ * name         Music filename.
+ */
+static Music *
+music_lookup_or_create(const char *name)
+{
+        /* See if structure with this name already exists. */
+        Music *music;
+        HASH_FIND_STR(music_hash, name, music);
+        if (music != NULL) {
+                /* Reset usage counter and return music. */
+                music->usage = MUSIC_HISTORY;
+                return music;
+        }
+        
+        /* New music. */
+        music = mp_alloc(&mp_music);
+        memset(music, 0, sizeof(*music));
+        assert(strlen(name) < sizeof(music->name));
+        strcpy(music->name, name);
+        
+        log_msg("Loading `%s` into music memory.", name);
+        music->mix_music = Mix_LoadMUS(name);
+        if (music->mix_music == NULL)
+                fatal_error("Could not load music: %s.", Mix_GetError());
+        
+        /* Mark as recently used. */
+        music->usage = MUSIC_HISTORY;
+        
+        /* Add to global hash which is indexed by name. */
+        HASH_ADD_STR(music_hash, name, music);
+        return music;
+}
+
+/*
+ * Free resources held within Sound structure, then free the structure memory
+ * itself.
+ */
+static void
+sound_free(Sound *snd)
+{
+        log_msg("Deleting sound `%s`.", snd->name);
+        Mix_FreeChunk(snd->sample);
+        memset(snd, 0, sizeof(*snd));
+
+        mp_free(&mp_sound, snd);
+}
+
+/*
+ * Free resources held within Music structure, then free the structure memory
+ * itself.
+ */
+static void
+music_free(Music *music)
+{
+        log_msg("Deleting music `%s`.", music->name);
+        Mix_FreeMusic(music->mix_music);
+        memset(music, 0, sizeof(*music));
+        
+        mp_free(&mp_music, music);
+}
+
+/*
+ * Free memory of those sounds and music that have not been used in a while.
+ */
+void
+audio_free_unused()
+{
+        Sound *snd, *snd_tmp;
+        HASH_ITER(hh, sound_hash, snd, snd_tmp) {
+                if (--snd->usage < 1) {
+                        HASH_DEL(sound_hash, snd);
+                        sound_free(snd);
+                }
+        }
+        
+        Music *music, *music_tmp;
+        HASH_ITER(hh, music_hash, music, music_tmp) {
+                if (--music->usage < 1) {
+                        HASH_DEL(music_hash, music);
+                        music_free(music);
+                }
+        }
 }
 
 void
@@ -172,12 +232,15 @@ audio_resume_group(uintptr_t group)
 }
 
 void
-audio_play(Sound *snd, uintptr_t group, int volume, int loops, int fade_in,
-    uint *sound_id, int *channel)
+audio_play(const char *name, uintptr_t group, int volume, int loops, int fade_in,
+           uint *sound_id, int *channel)
 {
         assert(have_audio);
-        assert(snd != NULL && fade_in >= 0 && loops >= -1);
+        assert(name && *name && fade_in >= 0 && loops >= -1);
         assert(sound_id != NULL && channel != NULL);
+        
+        /* Load sound. */
+        Sound *snd = sound_lookup_or_create(name);
         
         /* Present time. */
         uint32_t now = SDL_GetTicks();
@@ -443,6 +506,53 @@ audio_stop(int ch, uint sound_id)
 }
 
 /*
+ * loops        If zero, play infinite number of times.
+ */
+void
+audio_music_play(const char *name, int volume, int loops, int fade_in, double pos)
+{
+        assert(have_audio);
+        assert(loops >= 0);
+        assert(volume >= 0 && volume <= MIX_MAX_VOLUME);
+        assert(name && *name && fade_in >= 0 && pos >= 0.0);
+        
+        if (loops == 0)
+                loops = -1;
+        
+        Music *music = music_lookup_or_create(name);
+        Mix_VolumeMusic(volume);
+        Mix_RewindMusic();
+        
+        Mix_FadeInMusicPos(music->mix_music, loops, fade_in, pos);
+}
+
+void
+audio_music_set_volume(int volume)
+{
+        assert(volume >= 0 && volume <= MIX_MAX_VOLUME);
+        Mix_VolumeMusic(volume);
+}
+
+void
+audio_music_pause(void)
+{
+        Mix_PauseMusic();
+}
+
+void
+audio_music_resume(void)
+{
+        Mix_ResumeMusic();
+}
+
+void
+audio_music_fadeout(int fade_time)
+{
+        assert(fade_time >= 0);
+        Mix_FadeOutMusic(fade_time);
+}
+
+/*
  * Callback that is invoked whenever a channel finishes playback.
  */
 static void
@@ -544,6 +654,10 @@ audio_init()
         /* Register callback to be called when a channel finishes playback. */
         Mix_ChannelFinished(channel_finished);
         
+        /* Set up sound and music memory pools. */
+        mem_pool_init(&mp_sound, sizeof(Sound), 100, "Sound");
+        mem_pool_init(&mp_music, sizeof(Music), 10, "Music");
+        
         return (have_audio = 1);
 }
 
@@ -552,6 +666,10 @@ audio_close()
 {
         if (!have_audio)
                 return;
+        
         Mix_CloseAudio();
         Mix_Quit();
+        
+        mp_free_all(&mp_sound);
+        mp_free_all(&mp_music);
 }

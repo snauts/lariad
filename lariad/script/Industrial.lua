@@ -608,7 +608,7 @@ local function ElevatorPlatform(bb, handle, side)
 	local function Control(platform)
 		platform.gears.Stop()
 		if sound then
-			eapi.FadeOut(sound, 0.5)
+			eapi.FadeSound(sound, 0.5)
 			sound = nil
 		end
 	end

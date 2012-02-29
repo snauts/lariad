@@ -43,7 +43,7 @@ local function ActivateBoss(boss)
 	local target = nil
 	progressBar.Init(boss.health)
 	music = eapi.PlaySound(gameWorld, "sound/boss.ogg", -1, 1, 2)
-	eapi.FadeOut(ambient, 2)
+	eapi.FadeSound(ambient, 2)
 
 	local flop = false
 	local function KickBossCallback()
@@ -137,7 +137,7 @@ end
 
 local function BossDie(boss)
 	if boss.dead then return end
-	eapi.FadeOut(music, 4)
+	eapi.FadeSound(music, 4)
 
 	boss.dead = true
 	progressBar.Remove()

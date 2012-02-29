@@ -51,3 +51,4 @@ local exports = {
 	Tutorial = {func=proximity.Tutorial,points=2},
 }
 editor.Parse("script/WitchHouse-edit.lua", gameWorld, exports)
+util.ContinueMusic("sound/morning.ogg", 0.5)

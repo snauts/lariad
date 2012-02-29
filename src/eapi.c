@@ -3279,7 +3279,7 @@ __Clear(lua_State *L)
 	
 	/* Destroy textures and sounds that have not been used in a while. */
 	texture_free_unused();
-	sound_free_unused();
+	audio_free_unused();
 
 	/* Unbind keys. */
 	memset(key_bind, 0, sizeof(uint) * (SDLK_LAST + EXTRA_KEYBIND));
@@ -3319,18 +3319,13 @@ Quit(lua_State *L)
 static int
 PlaySound(lua_State *L)
 {
-	uint sound_id;
-	int n, loops, volume, fade_in, channel;
-	const char *filename;
-	Sound *snd;
-	World *world;
-
-	n = lua_gettop(L);
+	int n = lua_gettop(L);
 	L_assert(L, n >= 2 && n <= 5, "Incorrect number of arguments.");
 	luaL_checktype(L, 1, LUA_TLIGHTUSERDATA);
 	luaL_checktype(L, 2, LUA_TSTRING);
 	
 	/* World or no world. */
+        World *world;
 	if (lua_islightuserdata(L, 1)) {
 		world = lua_touserdata(L, 1);
 		L_assert_objtype(L, world, OBJTYPE_WORLD);
@@ -3340,18 +3335,14 @@ PlaySound(lua_State *L)
 	    	world = NULL;
 	}
 	
-	/* Look up sound by its filename. */
-	filename = lua_tostring(L, 2);
-	snd = sound_lookup_or_create(filename);
-	
-	loops = 0;
+	int loops = 0;
 	if (!lua_isnoneornil(L, 3)) {
 		luaL_checktype(L, 3, LUA_TNUMBER);
 		loops = lua_tonumber(L, 3);
 	}
 	L_assert(L, loops >= -1, "Invalid number of loops (%d).", loops);
 	
-	volume = MIX_MAX_VOLUME;
+	int volume = MIX_MAX_VOLUME;
 	if (!lua_isnoneornil(L, 4)) {
 		luaL_checktype(L, 4, LUA_TNUMBER);
 		volume = round(lua_tonumber(L, 4) * MIX_MAX_VOLUME);
@@ -3359,7 +3350,7 @@ PlaySound(lua_State *L)
 	L_assert(L, volume >= 0 && volume <= MIX_MAX_VOLUME, "Volume out of "
 	    "range.", volume);
 	
-	fade_in = 0;
+	int fade_in = 0;
 	if (!lua_isnoneornil(L, 5)) {
 		luaL_checktype(L, 5, LUA_TNUMBER);
 		fade_in = round(lua_tonumber(L, 5) * 1000.0);
@@ -3367,8 +3358,11 @@ PlaySound(lua_State *L)
 	L_assert(L, fade_in >= 0, "Invalid fade-in time.");
 	
 	/* Start playing. Use world pointer as group number. */
-	audio_play(snd, (uintptr_t)world, volume, loops, fade_in, &sound_id,
-	    &channel);
+        int channel;
+        uint sound_id;
+        const char *filename = lua_tostring(L, 2);
+	audio_play(filename, (uintptr_t)world, volume, loops, fade_in, &sound_id,
+                   &channel);
 	
 	/* Return sound handle = {soundID=sound_id, channel=ch}. */
 	lua_createtable(L, 0, 2);
@@ -3382,7 +3376,7 @@ PlaySound(lua_State *L)
 }
 
 /*
- * FadeOut(sound, time)
+ * FadeSound(sound, time)
  *
  * sound	Sound handle as returned by PlaySound().
  *		You may also pass a world here instead of a particual sound. In
@@ -3390,7 +3384,7 @@ PlaySound(lua_State *L)
  * time		Fade out time in seconds.
  */
 static int
-FadeOut(lua_State *L)
+LUA_FadeSound(lua_State *L)
 {
 	int channel, fade_time;
 	uint sound_id;
@@ -3415,12 +3409,19 @@ FadeOut(lua_State *L)
 		L_assert(L, sound_id > 0, "Invalid sound ID (%i).", sound_id);
 		L_assert(L, channel >= 0, "Invalid channel (%i).", channel);
 		
-		audio_fadeout(channel, sound_id, fade_time);
+                if (fade_time > 0)
+                        audio_fadeout(channel, sound_id, fade_time);
+                else
+                        audio_stop(channel, sound_id);
 		return 0;
 	case LUA_TLIGHTUSERDATA:
 		world = lua_touserdata(L, 1);
 		L_assert_objtype(L, world, OBJTYPE_WORLD);
-		audio_fadeout_group((uintptr_t)world, fade_time);
+                
+                if (fade_time > 0)
+                        audio_fadeout_group((uintptr_t)world, fade_time);
+                else
+                        audio_stop_group((uintptr_t)world);
 		return 0;
 	default:
 		return luaL_error(L, "Invalid argument type (%s). Either sound "
@@ -3556,60 +3557,104 @@ SetVolume(lua_State *L)
 }
 
 /*
- * StopSound(sound)
+ * PlayMusic(filename, loops=nil, volume=1, fadeInTime=0, position=0)
  *
- * sound	Sound handle as returned by PlaySound().
- *		You may also pass a world here instead of a particual sound. In
- *		this case all sounds belonging to that world will be stopped.
+ * filename	Music filename (e.g., "script/morning.mp3").
+ * loops	How many times the music should be played. `nil` means it
+ *		will loop forever (until some other condition stops it).
+ * volume	Number in the range [0..1].
+ * fadeInTime	The time it takes for sound to go from zero volume to full
+ *		volume.
+ * position     Jump to `position` seconds from beginning of song.
+ *
+ * Play music.
  */
 static int
-StopSound(lua_State *L)
+LUA_PlayMusic(lua_State *L)
 {
-	int channel;
-	uint sound_id;
-	World *world;
+        int n = lua_gettop(L);
+        L_assert(L, n >= 1 && n <= 5, "Incorrect number of arguments.");
+        luaL_checktype(L, 1, LUA_TSTRING);
 
-	L_numarg_check(L, 1);
-	switch (lua_type(L, 1)) {
-	case LUA_TTABLE:
-		/* Extract sound ID and channel. */
-		lua_pushstring(L, "soundID");
-		lua_rawget(L, 1);
-		sound_id = lua_tonumber(L, -1);
-		lua_pushstring(L, "channel");
-		lua_rawget(L, 1);
-		channel = lua_tonumber(L, -1);
-		L_assert(L, sound_id > 0, "Invalid sound ID (%i).", sound_id);
-		L_assert(L, channel >= 0, "Invalid channel (%i).", channel);
-		
-		audio_stop(channel, sound_id);
-		return 0;
-	case LUA_TLIGHTUSERDATA:
-		world = lua_touserdata(L, 1);
-		L_assert_objtype(L, world, OBJTYPE_WORLD);
-		audio_stop_group((uintptr_t)world);
-		return 0;
-	default:
- 		return luaL_error(L, "Invalid argument type (%s). Either sound "
-		    "handle or world expected.",
-		    lua_typename(L, lua_type(L, 1)));
-	}
+        int loops = 0;
+        if (!lua_isnoneornil(L, 2)) {
+                luaL_checktype(L, 2, LUA_TNUMBER);
+                loops = lua_tonumber(L, 2);
+        }
+        L_assert(L, loops >= 0, "Invalid number of loops (%d).", loops);
+
+        int volume = MIX_MAX_VOLUME;
+        if (!lua_isnoneornil(L, 3)) {
+                luaL_checktype(L, 3, LUA_TNUMBER);
+                volume = round(lua_tonumber(L, 3) * MIX_MAX_VOLUME);
+        }
+        L_assert(L, volume >= 0 && volume <= MIX_MAX_VOLUME, "Volume out of "
+                 "range.", volume);
+
+        int fade_in = 0;
+        if (!lua_isnoneornil(L, 4)) {
+                luaL_checktype(L, 4, LUA_TNUMBER);
+                fade_in = round(lua_tonumber(L, 4) * 1000.0);
+        }
+        L_assert(L, fade_in >= 0, "Invalid fade-in time.");
+        
+        double pos = 0.0;
+        if (!lua_isnoneornil(L, 5)) {
+                luaL_checktype(L, 5, LUA_TNUMBER);
+                pos = lua_tonumber(L, 5);
+        }
+
+        /* Start playing. Use world pointer as group number. */
+        const char *filename = lua_tostring(L, 1);
+        audio_music_play(filename, volume, loops, fade_in, pos);
+        return 0;
 }
 
 /*
- * __SetSoundStopCallback(sound, funcID)
- *
- * sound	Sound handle as returned by PlaySound().
- * funcID	Function ID into idToObjectMap (see eapi.lua).
- *
- * User function is executed when sound stops playing.
- * XXX: not implemented.
+ * FadeMusic(seconds)
  */
 static int
-__SetSoundStopCallback(lua_State *L)
+LUA_FadeMusic(lua_State *L)
 {
-	UNUSED(L);
-	return 0;
+        L_numarg_check(L, 1);
+        luaL_checktype(L, 1, LUA_TNUMBER);
+
+        /* Extract fade-out time and convert to milliseconds. */
+        int fade_time = round(lua_tonumber(L, 1) * 1000.0);
+        L_assert(L, fade_time >= 0, "Fade out time must not be negative.");
+
+        audio_music_fadeout(fade_time);
+        return 0;
+}
+
+/*
+ * SetMusicVolume([0..1])
+ */
+static int
+LUA_SetMusicVolume(lua_State *L)
+{
+	L_numarg_check(L, 1);
+	luaL_checktype(L, 1, LUA_TNUMBER);
+	
+	int volume = round(lua_tonumber(L, 1) * MIX_MAX_VOLUME);
+	L_assert(L, volume >= 0 && volume <= MIX_MAX_VOLUME, "Volume out of range.");
+
+	audio_music_set_volume(volume);
+        return 0;
+}
+
+static int
+LUA_PauseMusic(lua_State *L)
+{
+        L_numarg_check(L, 0);
+        audio_music_pause();
+}
+
+static int
+LUA_ResumeMusic(lua_State *L)
+{
+        L_numarg_check(L, 0);
+        audio_music_resume();
 }
 
 static uint32_t seed = 1;
@@ -3810,21 +3855,26 @@ eapi_register(lua_State *L, int audio_enabled)
 	/* Sound. */
 	if (audio_enabled) {
 		EAPI_ADD_FUNC(L, eapi_index, "PlaySound", PlaySound);
-		EAPI_ADD_FUNC(L, eapi_index, "StopSound", StopSound);
-		EAPI_ADD_FUNC(L, eapi_index, "FadeOut", FadeOut);
+		EAPI_ADD_FUNC(L, eapi_index, "FadeSound", LUA_FadeSound);
 		EAPI_ADD_FUNC(L, eapi_index, "SetVolume", SetVolume);
 		EAPI_ADD_FUNC(L, eapi_index, "BindVolume", BindVolume);
-		EAPI_ADD_FUNC(L, eapi_index, "__SetSoundStopCallback",
-		    __SetSoundStopCallback);
+                
+                EAPI_ADD_FUNC(L, eapi_index, "PlayMusic", LUA_PlayMusic);
+                EAPI_ADD_FUNC(L, eapi_index, "FadeMusic", LUA_FadeMusic);
+                EAPI_ADD_FUNC(L, eapi_index, "SetMusicVolume", LUA_SetMusicVolume);
+                EAPI_ADD_FUNC(L, eapi_index, "PauseMusic", LUA_PauseMusic);
+                EAPI_ADD_FUNC(L, eapi_index, "ResumeMusic", LUA_ResumeMusic);
 	} else {
 		EAPI_ADD_FUNC(L, eapi_index, "PlaySound", __Dummy);
-		EAPI_ADD_FUNC(L, eapi_index, "FadeOutChannel", __Dummy);
-		EAPI_ADD_FUNC(L, eapi_index, "SetChannelVolume", __Dummy);
+                EAPI_ADD_FUNC(L, eapi_index, "FadeSound", __Dummy);
 		EAPI_ADD_FUNC(L, eapi_index, "SetVolume", __Dummy);
-		EAPI_ADD_FUNC(L, eapi_index, "HaltChannel", __Dummy);
 		EAPI_ADD_FUNC(L, eapi_index, "BindVolume", __Dummy);
-		EAPI_ADD_FUNC(L, eapi_index, "__SetChannelHaltCallback",
-		    __Dummy);
+                
+                EAPI_ADD_FUNC(L, eapi_index, "PlayMusic", __Dummy);
+                EAPI_ADD_FUNC(L, eapi_index, "FadeMusic", __Dummy);
+                EAPI_ADD_FUNC(L, eapi_index, "SetMusicVolume", __Dummy);
+                EAPI_ADD_FUNC(L, eapi_index, "PauseMusic", __Dummy);
+                EAPI_ADD_FUNC(L, eapi_index, "ResumeMusic", __Dummy);
 	}
 	
 	/* Animation types. */

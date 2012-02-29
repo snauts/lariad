@@ -7,7 +7,7 @@ local function PlayBuzzsawSound(buzzsaw)
 	local pos2 = eapi.GetPos(buzzsaw.body)
 	if (vector.Distance(pos1, pos2) < 512) then
 		local handle = eapi.PlaySound(gameWorld, "sound/buzzsaw.ogg")
-		eapi.FadeOut(handle, 0.7)
+		eapi.FadeSound(handle, 0.7)
 	end
 end
 

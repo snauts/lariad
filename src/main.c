@@ -820,7 +820,6 @@ setup_memory()
 	mem_pool_init(&mp_path, sizeof(Path), 20, "Path pool");
 	
 	mem_pool_init(&mp_texture, sizeof(Texture), 100, "Texture pool");
-	mem_pool_init(&mp_sound, sizeof(Sound), 100, "Sound pool");
 	mem_pool_init(&mp_sprite, sizeof(SpriteList), 1000, "SpriteList pool");
 	mem_pool_init(&mp_tile, sizeof(Tile), TILES_MAX, "Tile pool");
 	mem_pool_init(&mp_body, sizeof(Body), 10000, "Body pool");

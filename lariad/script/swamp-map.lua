@@ -649,6 +649,7 @@ local exports = {
 editor.Parse("script/swamp-edit.lua", gameWorld, exports)
 
 eapi.PlaySound(gameWorld, "sound/frogs.ogg", -1, 0.5)
+util.PlayMusic("sound/morning.ogg", 1.0)
 
 eapi.Collide(gameWorld, "Player", "PondBottom",
 	     destroyer.Player_vs_PondBottom, 100)

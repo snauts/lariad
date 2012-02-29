@@ -94,3 +94,4 @@ ExitRoom({l=-5,r=5,b=-78,t=-70}, "swamp-map", {155,12},
 proximity.Tutorial({l=-5,r=150,b=-78,t=-70}, 3)
 
 eapi.PlaySound(gameWorld, "sound/frogs.ogg", -1, 0.1)
+util.ContinueMusic("sound/morning.ogg", 0.5)

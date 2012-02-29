@@ -66,7 +66,7 @@ local function StealGull(volume)
 	volume = volume or 1.0
 	return function()
 		local sound = eapi.PlaySound(gameWorld, fileName, 0, volume)
-		eapi.FadeOut(sound, 2)
+		eapi.FadeSound(sound, 2)
 	end
 end
 

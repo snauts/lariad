@@ -829,6 +829,26 @@ end
 
 local Message = nil
 
+local music = nil
+local contiuneMusic = nil
+local function StopMusic(timeout)
+	eapi.FadeMusic(timeout or 0.5)
+	music = nil
+end
+
+local function ContinueMusic(fileName, volume)
+	contiuneMusic = fileName
+	eapi.SetMusicVolume(volume)
+end
+
+local function PlayMusic(fileName, volume)
+	if not(music) then 
+		eapi.PlayMusic(fileName)
+		music = fileName
+	end
+	ContinueMusic(fileName, volume)
+end
+
 -- Wipe engine-side and client-side state and execute a script file.
 local function GoTo(roomName, TransitionFunc, disableESCAPE, fadeEffect)
 	eapi.SwitchFramebuffer()
@@ -858,10 +878,14 @@ local function GoTo(roomName, TransitionFunc, disableESCAPE, fadeEffect)
 
 	effects.Init()
 	weapons.Init()
+	contiuneMusic = nil
 	
 	dofile("script/" .. roomName .. ".lua")
 	dofile("script/ProgressBar.lua")
 
+	if not(music == contiuneMusic) then
+		StopMusic()
+	end
 	if TransitionFunc then
 		TransitionFunc()
 	end
@@ -1029,7 +1053,7 @@ local function PreloadSound(file)
 		end
 	else
 		handle = eapi.PlaySound(gameWorld, file, 0, 0)
-		eapi.StopSound(handle)
+		eapi.FadeSound(handle, 0)
 	end
 end
 
@@ -1097,6 +1121,9 @@ local function Tik()
 end
 
 util = {
+	PlayMusic = PlayMusic,
+	StopMusic = StopMusic,
+	ContinueMusic = ContinueMusic,
 	Click = Click,
 	Tik = Tik,
 	DoEvents = DoEvents,

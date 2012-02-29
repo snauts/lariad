@@ -107,7 +107,7 @@ local bigWaspShape = { l=192-32, r=192+32, b=32, t=144 }
 
 local function BigWaspDie(bigWasp)
 	eapi.PlaySound(gameWorld, "sound/bone-crush.wav")
-	eapi.FadeOut(music, 4)
+	eapi.FadeSound(music, 4)
 	bigWasp.gravity = {x=0, y=-1500}
 	bigWasp.dead = true
 	progressBar.Remove()

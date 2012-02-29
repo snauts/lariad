@@ -263,7 +263,7 @@ local function LandingPadTop(pos)
 
 	local function PlatformStop()
 		if generatorSound then
-			eapi.FadeOut(generatorSound, 0.5)
+			eapi.FadeSound(generatorSound, 0.5)
 		end
 		mainPC.StartInput()
 	end

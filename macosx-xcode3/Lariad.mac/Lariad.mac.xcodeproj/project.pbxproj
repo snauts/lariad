@@ -16,6 +16,12 @@
 		4B87370514F2733A0097411F /* README-SDL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4B87365214F2733A0097411F /* README-SDL.txt */; };
 		4B87370614F2733A0097411F /* script in Resources */ = {isa = PBXBuildFile; fileRef = 4B87365314F2733A0097411F /* script */; };
 		4B87370714F2733A0097411F /* sound in Resources */ = {isa = PBXBuildFile; fileRef = 4B8736B414F2733A0097411F /* sound */; };
+		4B8F4D3414FE795C003052F0 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B8F4D3314FE795C003052F0 /* SDL_image.framework */; };
+		4B8F4D3614FE795C003052F0 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B8F4D3514FE795C003052F0 /* SDL_mixer.framework */; };
+		4B8F4D3814FE795C003052F0 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B8F4D3714FE795C003052F0 /* SDL.framework */; };
+		4B8F4DBC14FE8AEC003052F0 /* SDL_image.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8F4D3314FE795C003052F0 /* SDL_image.framework */; };
+		4B8F4DBD14FE8AEF003052F0 /* SDL_mixer.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8F4D3514FE795C003052F0 /* SDL_mixer.framework */; };
+		4B8F4DF114FE8AF4003052F0 /* SDL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8F4D3714FE795C003052F0 /* SDL.framework */; };
 		4BB672B814EF0F1D005FA745 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672B714EF0F1D005FA745 /* SDLMain.m */; };
 		4BB672E214EF0F43005FA745 /* audio.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672B914EF0F43005FA745 /* audio.c */; };
 		4BB672E314EF0F43005FA745 /* body.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672BB14EF0F43005FA745 /* body.c */; };
@@ -37,14 +43,8 @@
 		4BB672F314EF0F43005FA745 /* qtree.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672D914EF0F43005FA745 /* qtree.c */; };
 		4BB672F414EF0F43005FA745 /* str.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672DB14EF0F43005FA745 /* str.c */; };
 		4BB672F514EF0F43005FA745 /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB672E014EF0F43005FA745 /* world.c */; };
-		4BB672F914EF0F7B005FA745 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB672F814EF0F7B005FA745 /* SDL_image.framework */; };
-		4BB672FB14EF0F7B005FA745 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB672FA14EF0F7B005FA745 /* SDL_mixer.framework */; };
-		4BB672FD14EF0F7B005FA745 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB672FC14EF0F7B005FA745 /* SDL.framework */; };
 		4BB6732A14EF11BE005FA745 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB6732914EF11BE005FA745 /* OpenGL.framework */; };
 		4BB673D214EF1635005FA745 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB673D114EF1635005FA745 /* liblua.a */; };
-		4BB673FC14EF1A90005FA745 /* SDL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB672FC14EF0F7B005FA745 /* SDL.framework */; };
-		4BB673FD14EF1A93005FA745 /* SDL_mixer.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB672FA14EF0F7B005FA745 /* SDL_mixer.framework */; };
-		4BB673FE14EF1A95005FA745 /* SDL_image.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB672F814EF0F7B005FA745 /* SDL_image.framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -56,9 +56,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4BB673FE14EF1A95005FA745 /* SDL_image.framework in CopyFiles */,
-				4BB673FD14EF1A93005FA745 /* SDL_mixer.framework in CopyFiles */,
-				4BB673FC14EF1A90005FA745 /* SDL.framework in CopyFiles */,
+				4B8F4DF114FE8AF4003052F0 /* SDL.framework in CopyFiles */,
+				4B8F4DBD14FE8AEF003052F0 /* SDL_mixer.framework in CopyFiles */,
+				4B8F4DBC14FE8AEC003052F0 /* SDL_image.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +80,9 @@
 		4B87365214F2733A0097411F /* README-SDL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "README-SDL.txt"; path = "../../lariad/README-SDL.txt"; sourceTree = SOURCE_ROOT; };
 		4B87365314F2733A0097411F /* script */ = {isa = PBXFileReference; lastKnownFileType = folder; name = script; path = ../../lariad/script; sourceTree = SOURCE_ROOT; };
 		4B8736B414F2733A0097411F /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sound; path = ../../lariad/sound; sourceTree = SOURCE_ROOT; };
+		4B8F4D3314FE795C003052F0 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL_image.framework"; sourceTree = "<absolute>"; };
+		4B8F4D3514FE795C003052F0 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL_mixer.framework"; sourceTree = "<absolute>"; };
+		4B8F4D3714FE795C003052F0 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL.framework"; sourceTree = "<absolute>"; };
 		4BB672B614EF0F1D005FA745 /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
 		4BB672B714EF0F1D005FA745 /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
 		4BB672B914EF0F43005FA745 /* audio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = audio.c; path = ../../src/audio.c; sourceTree = SOURCE_ROOT; };
@@ -123,9 +126,6 @@
 		4BB672DF14EF0F43005FA745 /* utlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utlist.h; path = ../../src/utlist.h; sourceTree = SOURCE_ROOT; };
 		4BB672E014EF0F43005FA745 /* world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = world.c; path = ../../src/world.c; sourceTree = SOURCE_ROOT; };
 		4BB672E114EF0F43005FA745 /* world.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = world.h; path = ../../src/world.h; sourceTree = SOURCE_ROOT; };
-		4BB672F814EF0F7B005FA745 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_image.framework"; sourceTree = "<absolute>"; };
-		4BB672FA14EF0F7B005FA745 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_mixer.framework"; sourceTree = "<absolute>"; };
-		4BB672FC14EF0F7B005FA745 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = "/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL.framework"; sourceTree = "<absolute>"; };
 		4BB6732914EF11BE005FA745 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		4BB673D114EF1635005FA745 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = "../../lua-5.1/src/liblua.a"; sourceTree = SOURCE_ROOT; };
 		8D1107310486CEB800E47090 /* Lariad_mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Lariad_mac-Info.plist"; sourceTree = "<group>"; };
@@ -138,11 +138,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				4BB672F914EF0F7B005FA745 /* SDL_image.framework in Frameworks */,
-				4BB672FB14EF0F7B005FA745 /* SDL_mixer.framework in Frameworks */,
-				4BB672FD14EF0F7B005FA745 /* SDL.framework in Frameworks */,
 				4BB6732A14EF11BE005FA745 /* OpenGL.framework in Frameworks */,
 				4BB673D214EF1635005FA745 /* liblua.a in Frameworks */,
+				4B8F4D3414FE795C003052F0 /* SDL_image.framework in Frameworks */,
+				4B8F4D3614FE795C003052F0 /* SDL_mixer.framework in Frameworks */,
+				4B8F4D3814FE795C003052F0 /* SDL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,9 +164,9 @@
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
-				4BB672F814EF0F7B005FA745 /* SDL_image.framework */,
-				4BB672FA14EF0F7B005FA745 /* SDL_mixer.framework */,
-				4BB672FC14EF0F7B005FA745 /* SDL.framework */,
+				4B8F4D3314FE795C003052F0 /* SDL_image.framework */,
+				4B8F4D3514FE795C003052F0 /* SDL_mixer.framework */,
+				4B8F4D3714FE795C003052F0 /* SDL.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -450,9 +450,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_image.framework/Headers",
-					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_mixer.framework/Headers",
-					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL_image.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL_mixer.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL.framework/Headers",
 					"/Volumes/xxx/Users/atis/Devel/game-2d/lua-5.1/src",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks ";
@@ -482,9 +482,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_image.framework/Headers",
-					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL_mixer.framework/Headers",
-					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx/frameworks/SDL.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL_image.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL_mixer.framework/Headers",
+					"/Volumes/xxx/Users/atis/Devel/game-2d/macosx-xcode3/frameworks/SDL.framework/Headers",
 					"/Volumes/xxx/Users/atis/Devel/game-2d/lua-5.1/src",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks ";
