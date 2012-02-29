@@ -67,3 +67,4 @@ snore.ogg	- http://www.freesound.org/people/mookie182/sounds/52234/
 gull.ogg	- http://www.freesound.org/people/nigelcoop/sounds/73497/
 toolbox.ogg	- http://www.freesound.org/people/jenc/sounds/524/
 tik.ogg		- http://www.freesound.org/people/KorgMS2000B/sounds/54405/
+morning.ogg	- http://musopen.org/music/piece/1109
