@@ -555,6 +555,22 @@ draw(Camera *cam)
 	glLoadIdentity();
 }
 
+static void joystick_movement(uint8_t state, int axis, int *dirs) {
+    if (dirs[axis]) {
+	int sym = (dirs[axis] + 1) / 2;
+	sym += SDLK_LAST + 200 + axis * 2;
+	exec_key_binding(L, sym, state);
+    }
+}
+
+static void joy_up(int axis, int *dirs) {
+    joystick_movement(SDL_KEYUP, axis, dirs);
+}
+
+static void joy_down(int axis, int *dirs) {
+    joystick_movement(SDL_KEYDOWN, axis, dirs);
+}
+
 /*
  * Process input/window events.
  */
@@ -587,17 +603,16 @@ process_events()
 				done = 1;
 				continue;
 			}
+			joy_up(ev.jaxis.axis, axis_dir);
 			if (abs(ev.jaxis.value) > 3200) {
-				int dir = ev.jaxis.value > 0 ? 1 : 0;
+				int dir = ev.jaxis.value > 0 ? 1 : -1;
 				axis_dir[ev.jaxis.axis] = dir;
-				state = SDL_KEYDOWN;
+				joy_down(ev.jaxis.axis, axis_dir);
 			}
 			else {
-				state = SDL_KEYUP;
+				axis_dir[ev.jaxis.axis] = 0;			
 			}
-			sym = axis_dir[ev.jaxis.axis];
-			sym += SDLK_LAST + 200 + ev.jaxis.axis * 2;
-			break;
+			continue;
 		case SDL_JOYBUTTONDOWN:
 			sym = SDLK_LAST + ev.jbutton.button + 100;
 			state = SDL_KEYDOWN;
