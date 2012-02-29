@@ -543,6 +543,7 @@ local function Load(world, player)
 	ActivateLock = false
 	player.shootInProgress = false
 	player.jumpInProgress = false	-- reset jumping state.
+        player.disableJumpSound = false
 	player.maxWalkSpeed = 250
 	player.jumpBucket = 0
 	player.id = "player"
