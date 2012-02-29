@@ -54,8 +54,8 @@ local function ActivateBoss(boss)
 			boss.vel.y = 50
 		end
 		target = { x = boss.facing * 1000, y = -100 }
-		if (boss.facing > 0 and boss.x + 900 > pos.x)
-		or (boss.facing < 0 and boss.x - 900 < pos.x) then
+		if (boss.facing > 0 and boss.x + 1050 > pos.x)
+		or (boss.facing < 0 and boss.x - 1150 < pos.x) then
 			if mainPC.dead then Facing(boss) end
 			SideJet(boss, -boss.facing, true)			
 			SideJet(boss, boss.facing, false)			
@@ -69,7 +69,7 @@ local function ActivateBoss(boss)
 			boss.vel.x = 0
 		end
 		if boss.vel.x == 0 then
-			target.y = target.y + 250 * util.Random()
+			target.y = target.y + 350 * util.Random()
 		end
 		if boss.vel.x == 0 or (util.Random() < 0.7 and flop) then
 			energy.Put(vector.Add(pos, {x = 128, y = 96}), target)
