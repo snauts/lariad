@@ -4,7 +4,7 @@ local eapi = eapi or { }
 
 Cfg = {
         name = "Lariad",
-	version = "1.0.1",
+	version = "1.x.x",
 
 	-- Display.
 	fullscreen	= true,

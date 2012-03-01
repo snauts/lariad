@@ -1,8 +1,12 @@
 local img = eapi.TextureToSpriteList("image/save-point.png", {64, 128})
 
 local function SaveGame(Continue)
+	local timer = nil
+	local sound = eapi.PlaySound(gameWorld, "sound/modem.ogg", 0, 0.3)
 	local function Noop() end
 	local function Stop()
+		timer = nil
+		eapi.FadeSound(sound, 0.5)
 		util.MessageDone()
 		Continue()
 	end
@@ -10,9 +14,14 @@ local function SaveGame(Continue)
 		util.GameMessage(txt.thisIsJustATest, camera, Stop)
 		return true
 	end
-	eapi.PlaySound(gameWorld, "sound/modem.ogg", 0, 0.3)
-	util.GameMessage(txt.saveGameUpload, camera, Noop)
-	eapi.AddTimer(gameWorld, 4.7, Stop)
+	timer = eapi.AddTimer(gameWorld, 4.7, Stop)
+	local function Skip()
+		if timer then 
+			eapi.DelTimer(timer)
+			Stop()
+		end
+	end
+	util.GameMessage(txt.saveGameUpload, camera, Skip)
 	game.Save(nil, true)
 	return true
 end
