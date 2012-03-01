@@ -30,13 +30,14 @@ Animation types (added to eapi from the engine during startup):
 local function GenID(obj, owner)
 	assert(obj, "GenID() argument evaluates to false.")
 	local ID = lastID + 1
-	idToObjectMap[ID] = { owner = owner, func = obj }
+	local callback = { owner = owner, func = obj, ID = ID }
+	idToObjectMap[ID] = callback
 	if owner then
 		if not ownerToIdMap[owner] then ownerToIdMap[owner] = { } end
 		ownerToIdMap[owner][ID] = ID
 	end
 	lastID = ID
-	return ID
+	return callback
 end
 
 function eapi.Clear()
@@ -64,7 +65,7 @@ function eapi.SetStepFunc(objectPtr, stepFunc, afterStepFunc)
 	else
 		assert(type(stepFunc) == "function",
 		    "stepFunc: function expected, got "..type(stepFunc))
-		stepFuncID = GenID(stepFunc)
+		stepFuncID = GenID(stepFunc).ID
 	end
 	
 	if not afterStepFunc then
@@ -72,7 +73,7 @@ function eapi.SetStepFunc(objectPtr, stepFunc, afterStepFunc)
 	else
 		assert(type(afterStepFunc) == "function",
 		    "afterStepFunc: function expected, got "..type(afterStepFunc))
-		afterStepFuncID = GenID(afterStepFunc)
+		afterStepFuncID = GenID(afterStepFunc).ID
 	end
 
 	eapi.__SetStepFunc(objectPtr, stepFuncID, afterStepFuncID)
@@ -87,9 +88,17 @@ end
 	when	How many seconds until timer is called.
 	func	Timer function.
 ]]--
+
 function eapi.AddTimer(obj, when, func)
 	when = eapi.GetTime(obj) + when
-	return eapi.__NewTimer(obj, when, GenID(func, obj))
+	local callback = GenID(func, obj)
+	callback.timer = eapi.__NewTimer(obj, when, callback.ID)
+	return callback
+end
+
+function eapi.DelTimer(callback)
+	eapi.RemoveTimer(callback.timer)
+	idToObjectMap[callback.ID] = nil
 end
 
 --[[ Whenever it's necessary to invoke a function if only its ID in the
@@ -130,7 +139,7 @@ function eapi.BindKey(key, func)
 			eapi.__BindKey(key, 0)
 			return
 		end
-		eapi.__BindKey(key, GenID(func))
+		eapi.__BindKey(key, GenID(func).ID)
 	end
 end
 
@@ -177,7 +186,7 @@ function eapi.Collide(world, groupNameA, groupNameB, func, priority)
 	if not priority then
 		priority = 0
 	end
-	local id = GenID(func)
+	local id = GenID(func).ID
 	eapi.__Collide(world, groupNameA, groupNameB, id, priority)
 end
 
