@@ -755,15 +755,34 @@ static void calculate_screen_dimensions(void) {
 	}
 }
 
+static SDL_Surface *set_video_mode(int w, int h, int fullscreen) {
+	SDL_Surface *scr;
+	Uint32 video_flags = (SDL_OPENGL | SDL_DOUBLEBUF | SDL_HWSURFACE);
+	video_flags |= fullscreen ? SDL_FULLSCREEN : 0;
+	log_msg("Attempting to set %dx%d fullscreen=%d", w, h, fullscreen);
+	scr = SDL_SetVideoMode(w, h, config.screen_bpp, video_flags);
+	if (scr == NULL) {
+		log_err("SDL_SetVideoMode() failed: %s", SDL_GetError());
+	}
+	else {
+		config.window_width = w;
+		config.window_height = h;
+		calculate_screen_dimensions();
+		config.screen_bpp = scr->format->BitsPerPixel;
+		config.fullscreen = fullscreen;
+	}
+	return scr;
+}
+
 static void
 game_window()
 {
 	int value;
-	SDL_Surface	*scr;
-	Uint32		video_flags;
 	const SDL_VideoInfo *vinfo;
 	int double_buf = 1;
 	int swap_control = 1;
+	int w = config.window_width;
+	int h = config.window_height;
 
 	/* Set OpenGL attributes. */
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, double_buf);
@@ -774,25 +793,21 @@ game_window()
 	/* Get desktop width & height. */
 	vinfo = SDL_GetVideoInfo();
 	assert(vinfo != NULL);
-	if (config.fullscreen && config.force_native) {
-		/* use native video mode while in fullscreen */
-		config.window_width = vinfo->current_w;
-		config.window_height = vinfo->current_h;
-	}
-	calculate_screen_dimensions();
 
 	/* Create game window. */
 	SDL_WM_SetCaption(config.name.data, config.name.data);
-	video_flags = (SDL_OPENGL | SDL_DOUBLEBUF | SDL_HWSURFACE);
-	if (config.fullscreen)
-		video_flags |= SDL_FULLSCREEN;
-	scr = SDL_SetVideoMode(config.window_width, config.window_height,
-	    config.screen_bpp, video_flags);
-	if (scr == NULL) {
-		log_err("SDL_SetVideoMode() failed: %s", SDL_GetError());
-		abort();
+	
+	if (config.fullscreen 
+	    && config.force_native
+	    && set_video_mode(vinfo->current_w, vinfo->current_h, 1)) {
 	}
-	config.screen_bpp = scr->format->BitsPerPixel;
+	else if (config.fullscreen && set_video_mode(w, h, 1)) {
+	}
+	else if (set_video_mode(w, h, 0)) {	    
+	}
+	else {
+	    abort();
+	}
 
 	SDL_GL_GetAttribute(SDL_GL_DOUBLEBUFFER, &value);
 	if (value != double_buf)
