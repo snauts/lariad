@@ -589,6 +589,16 @@ process_events()
 		case SDL_KEYDOWN:
 			sym = ev.key.keysym.sym;
 			state = SDL_KEYDOWN;
+#ifdef __APPLE__
+                        /* Handle `Command + Q` and `Command + H` events on Mac OS X. */
+                        SDLMod mod = ev.key.keysym.mod;
+                        if (mod == KMOD_LMETA || mod == KMOD_RMETA) {
+                                if (sym == SDLK_q)
+                                        exit(EXIT_SUCCESS);
+                                if (sym == SDLK_h)
+                                        SDL_WM_IconifyWindow();
+                        }
+#endif
 			break;
 		case SDL_KEYUP:
 			sym = ev.key.keysym.sym;
