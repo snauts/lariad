@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
 	uint32_t now, before, delta_time, game_delta_time, remainder;
 	int steps_per_frame, fps_count, world_i, cam_i, arg_i, sound_works, i;
 	const SDL_version *sdl_version;
+	int fb_support = 1;
 	World *world;
 
 	log_open(NULL);		/* Log output goes to stderr. */
@@ -182,7 +183,10 @@ int main(int argc, char *argv[])
 	
 
 	if (!check_extension("GL_EXT_framebuffer_object"))
+	{
 		log_warn("GL_EXT_framebuffer_object not present.");
+		fb_support = 0;
+	}
 	if (!check_extension("GL_ARB_imaging"))
 		log_warn("GL_ARB_imaging not present.");
 	if (!check_extension("GL_ARB_vertex_buffer_object"))
@@ -341,12 +345,18 @@ int main(int argc, char *argv[])
 		 * before anything is rendered isn't necessary, but may be done
 		 * here if desired.
 		 */
-		bind_framebuffer();
+		if (fb_support) {
+			bind_framebuffer();
+		}
+		else {
+			glClearColor(0.0, 0.0, 0.0, 1.0);
+			glClear(GL_COLOR_BUFFER_BIT);		    
+		}
 		for (cam_i = 0; cam_i < CAMERAS_MAX; cam_i++) {
 			if (cameras[cam_i] != NULL)
 				draw(cameras[cam_i]);
 		}
-		draw_framebuffer();
+		if (fb_support) draw_framebuffer();
 		/*
 		 * These may be executed here, but don't seem to do much.
 		 * glFlush();
