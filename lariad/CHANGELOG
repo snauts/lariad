@@ -1,3 +1,9 @@
+What's new in 1.0.4:
+
+*) do not to use transition FX if framebuffer object is not supported;
+*) fix pyramid entrance blackness sprite;
+*) fix waterfall elevator shaft sprite;
+
 What's new in 1.0.3:
 
 *) fix video mode setup (dedicated to feillyne@moddb.com);

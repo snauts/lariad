@@ -94,13 +94,15 @@ local function PyramidEntrance(x, y)
 		slab.Small(x, y + 42 + i * 58, -0.5, nil, 0)
 		slab.Small(x - 60, y + i * 58, 1.5, nil, 0)
 		Occlusion.put('f', x - 4, y + i * 64 + 4, 0.1)
-		Occlusion.put('b', x + 60, y + i * 64, 0.1)
+		Occlusion.put('b', x + 60, y + i * 64 - 12, 0.1)
 		for j = 1, 3, 1 do
 			slab.Small(x - 240*j - 64, y + i*116 - 32, -3, nil, 0)
 			slab.Big(x - 240*j - 40, y + i*116 - 4, tmp, nil, 0)
 			tmp = tmp - 0.01
 		end
 	end
+	slab.Small(x - 60, y - 58, 1.5, nil, 0)
+	slab.Small(x + 64, y - 58, 1.5, nil, 0)
 	slab.Big(x - 100, y + 220, 0.6, nil, 0)
 	shape.Line({x - 150, y}, {x - 100, y + 220}, "Box")
 	shape.Line({x - 100, y + 220}, {x + 100, y + 270}, "Box")

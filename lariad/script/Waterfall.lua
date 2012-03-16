@@ -214,7 +214,7 @@ local function ElevatorShaft(x, y, d)
 	for i=0, 16, 1 do
 		if d > 0 then DecoreUp(7, 8) else DecoreDown(7, 8) end
 	end
-	yy = ((d > 0) and 0) or 16
+	yy = ((d > 0) and -32) or 16
 	if flipElevator then xx = fixx(0) else xx = fixx(-3) end
 	for i=1, 31, 1 do
 		if d > 0 then DecoreDown(8, 21) else DecoreUp(8, 21) end
