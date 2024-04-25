@@ -3,9 +3,12 @@
 #include <lualib.h>
 #include "log.h"
 #include "lua_util.h"
+#include "config.h"
 
 static lua_State *cfg_L;	/* Lua state used by cfg_ functions. */
 static int cfg_index;		/* Configuration table stack index. */
+
+Config config;
 
 static int
 cfg_error_handler(lua_State *L)

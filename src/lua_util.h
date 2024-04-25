@@ -62,7 +62,7 @@
 #endif /* Debug mode */
 
 /* Function return codes. */
-enum {
+typedef enum {
 	L_OK,
 	L_INVALID_SHAPE_SPEC,
 	L_NEGATIVE_RADIUS,

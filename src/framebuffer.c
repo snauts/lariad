@@ -6,6 +6,8 @@
 #include "geometry.h"
 #include "misc.h"
 
+extern Config config;
+
 enum {
     JUST_DISPLAY = 0,
     CROSSFADE,

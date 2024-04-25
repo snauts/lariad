@@ -4,7 +4,7 @@
 #include "str.h"
 
 /* Cached configuration (mostly read from config.lua). */
-struct {
+typedef struct {
 	int	fullscreen;
 	
 	uint	FPSUpdateInterval;
@@ -22,7 +22,7 @@ struct {
 	float	w_t, w_b, w_l, w_r;
 	uint	screen_bpp;
 	int	force_native;
-} config;
+} Config;
 
 void	cfg_read(const char *filename);
 void	cfg_close();

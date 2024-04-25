@@ -8,6 +8,8 @@
 #include "geometry.h"
 #include "config.h"
 
+extern Config config;
+
 /*
  * Lua utility routines.
  */

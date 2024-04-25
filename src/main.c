@@ -25,6 +25,8 @@
 #include "world.h"
 #include "str.h"
 
+extern Config config;
+
 void	eapi_register(lua_State *L, int audio_enabled);	/* Defined in eapi.c */
 
 /* The following functions are defined at the bottom of this file. */

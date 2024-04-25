@@ -12,6 +12,9 @@
 #include "world.h"
 #include "utlist.h"
 
+extern Config config;
+Console console;
+
 /* Function that does nothing. */
 static int
 __Dummy(lua_State *L)
