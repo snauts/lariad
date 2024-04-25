@@ -7,7 +7,7 @@ Cfg = {
 	version = "1.x.x",
 
 	-- Display.
-	fullscreen	= true,
+	fullscreen	= false,
 	windowWidth	= 800,
 	windowHeight	= 480,
 	screenBPP	= 0,		-- 0 = current bits per pixel.
