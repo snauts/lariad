@@ -30,7 +30,7 @@ local function TouchFrog(player, frog)
 		eapi.PlaySound(gameWorld, "sound/croak.ogg")	
 		eapi.PlaySound(gameWorld, "sound/punch.ogg")	
 		FrogDirection(frog, not(player.direction))
-		eapi.RemoveTimer(frog.timer)
+		eapi.DelTimer(frog.timer)
 		KickFrog(frog)
 	end
 end
