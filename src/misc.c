@@ -50,62 +50,19 @@ gentex_checkerboard(int width, int height)
 void
 surface_to_texture(Texture *tex, SDL_Surface *img)
 {
-	SDL_Surface *converted;
-	Uint32 flags, rmask, gmask, bmask, amask;
+	assert(img->format->BytesPerPixel == 4);
 
-	assert(tex != NULL);
-	assert(!SDL_MUSTLOCK(img)); /* Shouldn't require locking. */
-	
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	rmask = 0xff000000;
-	gmask = 0x00ff0000;
-	bmask = 0x0000ff00;
-	amask = 0x000000ff;
-#else
-	rmask = 0x000000ff;
-	gmask = 0x0000ff00;
-	bmask = 0x00ff0000;
-	amask = 0xff000000;
-#endif
-	/* Create a surface with such a pixel format that we can feed its pixels
-	   directly into OpenGL. */
-	flags = SDL_SWSURFACE | SDL_SRCALPHA;
-	converted = SDL_CreateRGBSurface(flags, img->w, img->h, 32, rmask,
-	    gmask, bmask, amask);
-	if (converted == NULL)
-		fatal_error("[SDL] Could not create surface for texture (%s)"
-		    "conversion: %s", tex->name, SDL_GetError());
-	    
-	/* From SDL documentation wiki:
-	 * When you're blitting between two alpha surfaces, normally the alpha
-	 * of the destination acts as a mask. If you want to just do a
-	 * "dumb copy" that doesn't blend, you have to turn off the SDL_SRCALPHA
-	 * flag on the source surface. This is how it's supposed to work, but
-	 * can be surprising when you're trying to combine one image with
-	 * another and both have transparent backgrounds.
-	 */
-	img->flags &= ~SDL_SRCALPHA;
-	
-	/* Copy loaded image data onto a surface that we can feed into OpenGL.
-	   We let SDL_BlitSurface() do all the conversion work. */
-	if (SDL_BlitSurface(img, NULL, converted, NULL) != 0)
-		fatal_error("[SDL] Convert-blit of %s unsuccessful.", tex->name);
-	
-	/* Store image width & height in texture struct. Note that actual
-	   texture size must be power of two. */
-	tex->w = img->w;
-	tex->h = img->h;
-	tex->pow_w = nearest_pow2(img->w);
-	tex->pow_h = nearest_pow2(img->h);
+        tex->w = img->w;
+        tex->h = img->h;
+        tex->pow_w = nearest_pow2(img->w);
+        tex->pow_h = nearest_pow2(img->h);
 
-	/* Create a blank texture with power-of-two dimensions. Then load
-	   converted image data into its lower left. */
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex->pow_w, tex->pow_h, 0,
-	    GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, converted->w, converted->h,
-	    GL_RGBA, GL_UNSIGNED_BYTE, converted->pixels);
-	    
-	SDL_FreeSurface(converted);
+        /*
+         * Create a blank texture with power-of-two dimensions. Then load
+         * converted image data into its lower left.
+         */
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex->pow_w, tex->pow_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, img->w, img->h, GL_RGBA, GL_UNSIGNED_BYTE, img->pixels);
 }
 
 /*

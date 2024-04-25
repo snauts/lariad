@@ -68,7 +68,7 @@ __BindKey(lua_State *L)
 
 	key = lua_tointeger(L, 1);
 	func_id = lua_tointeger(L, 2);
-	L_assert(L, key > SDLK_FIRST && key < SDLK_LAST + EXTRA_KEYBIND,
+	L_assert(L, key > 0 && key < SDL_NUM_SCANCODES + EXTRA_KEYBIND,
 	    "Invalid key (%i).", key);
 	L_assert(L, func_id >= 0, "Function ID must not be negative "
 	    "(func_id: %i).", func_id);
@@ -93,7 +93,7 @@ GetKeyBindings(lua_State *L)
 	L_numarg_check(L, 0);
 	
 	lua_newtable(L);	/* ... {} */
-	for (key = 0; key < SDLK_LAST + EXTRA_KEYBIND; key++) {
+	for (key = 0; key < SDL_NUM_SCANCODES + EXTRA_KEYBIND; key++) {
 		if (key_bind[key] == 0)
 			continue;
 		lua_pushinteger(L, key);
@@ -123,7 +123,7 @@ SetKeyBindings(lua_State *L)
 	luaL_checktype(L, 1, LUA_TTABLE);
 	
 	/* Unbind keys. */
-	memset(key_bind, 0, sizeof(uint) * (SDLK_LAST + EXTRA_KEYBIND));
+	memset(key_bind, 0, sizeof(uint) * (SDL_NUM_SCANCODES + EXTRA_KEYBIND));
 	
 	lua_pushnil(L);  /* first key */
 	while (lua_next(L, 1) != 0) {
@@ -3285,7 +3285,7 @@ __Clear(lua_State *L)
 	audio_free_unused();
 
 	/* Unbind keys. */
-	memset(key_bind, 0, sizeof(uint) * (SDLK_LAST + EXTRA_KEYBIND));
+	memset(key_bind, 0, sizeof(uint) * (SDL_NUM_SCANCODES + EXTRA_KEYBIND));
 	
 	return 0;
 }
@@ -3887,7 +3887,7 @@ eapi_register(lua_State *L, int audio_enabled)
 	EAPI_ADD_INT(L, eapi_index, "ANIM_REVERSE", TILE_ANIM_REVERSE);
 	
 	/* Last key index. */
-	EAPI_ADD_INT(L, eapi_index, "SDLK_LAST", SDLK_LAST);
+	EAPI_ADD_INT(L, eapi_index, "SDLK_LAST", SDL_NUM_SCANCODES);
 	
 	/* Load the part of eapi interface that lives in eapi.lua. */
 	if ((luaL_loadfile(L, "eapi.lua") ||

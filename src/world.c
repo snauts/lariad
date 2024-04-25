@@ -702,8 +702,8 @@ world_step(World *world, lua_State *L, int first_step)
 		for (cam_i = 0; cam_i < num_cam_data; cam_i++) {
 			/* Put body in the array if it's close to camera. */
 			diff = vect_f_sub(body->pos, cam_data[cam_i].pos);
-			if (abs(diff.x) < cam_data[cam_i].size.x &&
-			    abs(diff.y) < cam_data[cam_i].size.y) {
+			if (fabs(diff.x) < cam_data[cam_i].size.x &&
+			    fabs(diff.y) < cam_data[cam_i].size.y) {
 				assert(num_iter_bodies < MAX_ITER_BODIES);
 				iter_bodies[num_iter_bodies++] = body;
 				break;	/* Once is enough. */

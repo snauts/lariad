@@ -8,6 +8,12 @@
 
 extern Config config;
 
+void (*glGenerateMipmap)(GLenum target);
+void (*glGenFramebuffers)(GLsizei n, GLuint *ids);
+void (*glBindFramebuffer)(GLenum target, GLuint framebuffer);
+void (*glFramebufferTexture2D)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+void (*glDeleteFramebuffers)(GLsizei n, GLuint *framebuffers);
+
 enum {
     JUST_DISPLAY = 0,
     CROSSFADE,
@@ -29,13 +35,6 @@ static GLuint texture_id[] = { 0, 0 };
 static float fb_texture_s;
 static float fb_texture_t;
 
-#ifdef __WIN32
-PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT = 0;
-PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT = 0;
-PFNGLDELETEFRAMEBUFFERSEXTPROC glDeleteFramebuffersEXT = 0;
-PFNGLFRAMEBUFFERTEXTURE2DEXTPROC glFramebufferTexture2DEXT = 0;
-#endif
-
 void switch_framebuffer(void) {
     fb_to_draw_into = fb_to_draw_into ^ 1;
     fb_to_display = fb_to_draw_into ^ 1;
@@ -46,17 +45,6 @@ static void init_framebuffer(int i) {
     uint fb_texture_h = nearest_pow2(config.screen_height);
     fb_texture_s = (float)config.screen_width / fb_texture_w;
     fb_texture_t = (float)config.screen_height / fb_texture_h;
-
-#ifdef __WIN32
-    glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)
-	wglGetProcAddress("glGenFramebuffersEXT");
-    glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)
-	wglGetProcAddress("glDeleteFramebuffersEXT");
-    glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)
-	wglGetProcAddress("glBindFramebufferEXT");
-    glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)
-	wglGetProcAddress("glFramebufferTexture2DEXT");
-#endif
 
     /* generate texture */
     glGenTextures(1, &texture_id[i]);
@@ -69,15 +57,27 @@ static void init_framebuffer(int i) {
 		 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
+    /* Get extension function addresses. */
+    glGenerateMipmap = (__typeof__(glGenerateMipmap))
+        SDL_GL_GetProcAddress("glGenerateMipmapEXT");
+    glGenFramebuffers = (__typeof__(glGenFramebuffers))
+        SDL_GL_GetProcAddress("glGenFramebuffersEXT");
+    glBindFramebuffer = (__typeof__(glBindFramebuffer))
+        SDL_GL_GetProcAddress("glBindFramebufferEXT");
+    glFramebufferTexture2D = (__typeof__(glFramebufferTexture2D))
+        SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
+    glDeleteFramebuffers = (__typeof__(glDeleteFramebuffers))
+            SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
+
     /* generate framebuffer object */
-    glGenFramebuffersEXT(1, &fbo_id[i]);
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo_id[i]);
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
+    glGenFramebuffers(1, &fbo_id[i]);
+    glBindFramebuffer(GL_FRAMEBUFFER_EXT, fbo_id[i]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER_EXT,
 			      GL_COLOR_ATTACHMENT0_EXT,
 			      GL_TEXTURE_2D, texture_id[i], 0);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);	
+    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);	
 }
 
 void bind_framebuffer(void) {
@@ -87,7 +87,7 @@ void bind_framebuffer(void) {
 	init_framebuffer(1);
 	init_done = 1;
     }
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo_id[fb_to_draw_into]);
+    glBindFramebuffer(GL_FRAMEBUFFER_EXT, fbo_id[fb_to_draw_into]);
 }
 
 static void draw_prolog(GLuint texture_id, float alpha) {
@@ -211,7 +211,7 @@ void fade_to_other_framebuffer(int transition_type) {
 
 void draw_framebuffer(void) {
     extern uint bound_texture;
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
     glViewport(0, 0, config.window_width, config.window_height);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -233,7 +233,7 @@ static void delete_framebuffer(int i) {
 	glDeleteTextures(1, &texture_id[i]);
     }
     if (fbo_id[i]) {
-	glDeleteFramebuffersEXT(1, &fbo_id[i]);
+	glDeleteFramebuffers(1, &fbo_id[i]);
     }
 }
 
