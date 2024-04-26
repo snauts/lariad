@@ -340,10 +340,10 @@ eapi.KEY_KP_ENTER		= 271
 eapi.KEY_KP_EQUALS		= 272
 
 --[[ Arrows + Home/End pad ]]--
-eapi.KEY_UP			= 273
-eapi.KEY_DOWN		= 274
-eapi.KEY_RIGHT		= 275
-eapi.KEY_LEFT		= 276
+eapi.KEY_UP			= 82
+eapi.KEY_DOWN		= 81
+eapi.KEY_RIGHT		= 79
+eapi.KEY_LEFT		= 80
 eapi.KEY_INSERT		= 277
 eapi.KEY_HOME		= 278
 eapi.KEY_END		= 279
