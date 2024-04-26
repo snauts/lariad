@@ -15,7 +15,7 @@ Cfg = {
 	-- Sound.
 	channels	= 16,		-- Number of mixing channels.
 	frequency	= 22050,	-- Use 44100 for 44.1KHz (CD audio).
-	chunksize	= 512,		-- Less is slower but more accurate.
+	chunksize	= 2048,		-- Less is slower but more accurate.
 	stereo		= true,		-- Mono or stereo output.
 
 	-- Debug things.
