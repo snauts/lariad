@@ -381,8 +381,8 @@ texture_lookup_or_create(const char *name)
 	load_texture_from_file(tex, name);
 
 	GLenum error;
-	while ((error = GL_GetError()) != GL_NO_ERROR) {
-		log_warn("OpenGL error: %s", getGLErrorString(error))
+	while ((error = glGetError()) != GL_NO_ERROR) {
+		log_warn("OpenGL error: %s", getGLErrorString(error));
 	}
 	
 	/* Mark texture as recently used. */

@@ -5,6 +5,7 @@
 #include "config.h"
 #include "geometry.h"
 #include "misc.h"
+#include "log.h"
 
 extern Config config;
 
@@ -51,10 +52,9 @@ static void init_framebuffer(int i) {
     glBindTexture(GL_TEXTURE_2D, texture_id[i]);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, fb_texture_w, fb_texture_h,
-		 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, fb_texture_w, fb_texture_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     /* Get extension function addresses. */
@@ -71,13 +71,18 @@ static void init_framebuffer(int i) {
 
     /* generate framebuffer object */
     glGenFramebuffers(1, &fbo_id[i]);
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, fbo_id[i]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER_EXT,
-			      GL_COLOR_ATTACHMENT0_EXT,
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id[i]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,
+			      GL_COLOR_ATTACHMENT0,
 			      GL_TEXTURE_2D, texture_id[i], 0);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);	
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	GLenum error;
+	while ((error = glGetError()) != GL_NO_ERROR) {
+		log_warn("OpenGL error: %s", getGLErrorString(error));
+	}
 }
 
 void bind_framebuffer(void) {
@@ -109,7 +114,7 @@ static void draw_scaled(GLuint texture_id, float q) {
     glTexCoord2f(fb_texture_s, 0);
     glVertex2f(0.5 + q * w, 0.5 - q * h);
     glEnd();
-} 
+}
 
 static void draw_image(GLuint texture_id, float x, float y, float alpha) {
     draw_prolog(texture_id, alpha);
@@ -123,7 +128,7 @@ static void draw_image(GLuint texture_id, float x, float y, float alpha) {
     glTexCoord2f(fb_texture_s, 0);
     glVertex2f(config.w_r + x, config.w_b + y);
     glEnd();
-} 
+}
 
 static void just_display_framebuffer(void) {
     draw_image(texture_id[fb_to_display], 0, 0, 1.0);
