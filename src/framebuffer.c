@@ -57,14 +57,16 @@ static void init_framebuffer(int i) {
     glBindTexture(GL_TEXTURE_2D, 0);
 
     /* Get extension function addresses. */
-    glGenFramebuffers = (__typeof__(glGenFramebuffers))
-        SDL_GL_GetProcAddress("glGenFramebuffersEXT");
-    glBindFramebuffer = (__typeof__(glBindFramebuffer))
-        SDL_GL_GetProcAddress("glBindFramebufferEXT");
-    glFramebufferTexture2D = (__typeof__(glFramebufferTexture2D))
-        SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
-    glDeleteFramebuffers = (__typeof__(glDeleteFramebuffers))
-            SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
+    if (!glGenFramebuffers) {
+	glGenFramebuffers = (__typeof__(glGenFramebuffers))
+		SDL_GL_GetProcAddress("glGenFramebuffersEXT");
+	glBindFramebuffer = (__typeof__(glBindFramebuffer))
+		SDL_GL_GetProcAddress("glBindFramebufferEXT");
+	glFramebufferTexture2D = (__typeof__(glFramebufferTexture2D))
+		SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
+	glDeleteFramebuffers = (__typeof__(glDeleteFramebuffers))
+		SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
+    }
 
     /* generate framebuffer object */
     glGenFramebuffers(1, &fbo_id[i]);
