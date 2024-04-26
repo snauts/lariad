@@ -6,7 +6,6 @@
 #include <errno.h>
 #include <math.h>
 #include <stdint.h>
-#include <unistd.h>	/* Needed for chdir(), works under MinGW. */
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -39,7 +38,6 @@ static void	draw(Camera *cam);
 static void	process_events();
 static void	exec_key_binding(lua_State *L, SDL_Keysym key, int state);
 static void	read_cfg_file();
-static void	parse_cmd_opt(int argc, char *argv[]);
 static SDL_Window *game_window();
 
 World	*worlds[WORLDS_MAX];	/* Pointers to all worlds are stored here. */
@@ -106,8 +104,8 @@ void cleanup_framebuffer(void);
 static SDL_Joystick *joystick[MAX_JOYSTICKS];
 
 static uint32_t now, before, delta_time, game_delta_time, remaindr;
-static int steps_per_frame, fps_count, world_i, cam_i, arg_i, sound_works, i;
-static int fb_support = 1;
+static int steps_per_frame, fps_count, world_i, cam_i, sound_works, i;
+static int fb_support = 0;
 static World *world;
 
 static void
@@ -224,6 +222,7 @@ game_loop() {
 		if (cameras[cam_i] != NULL)
 			draw(cameras[cam_i]);
 	}
+
 	if (fb_support) draw_framebuffer();
 	/*
 	* These may be executed here, but don't seem to do much.
@@ -233,12 +232,12 @@ game_loop() {
 	SDL_GL_SwapWindow(win);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
 	log_open(NULL);		/* Log output goes to stderr. */
 
 	/* Init strings. */
-        str_init(&config.name);
+	str_init(&config.name);
 	str_init(&config.version);
 	str_init(&config.location);
 
@@ -251,38 +250,21 @@ int main(int argc, char *argv[])
 	lua_pushcfunction(L, error_handler);
 	errfunc_index = lua_gettop(L);
 
-	/* Find user application directory in command line options (-L). */
-	for (arg_i = 1; arg_i < argc; arg_i++) {
-		if (strcmp(argv[arg_i], "-L") != 0)
-			continue;
-		if (arg_i + 1 == argc)
-			break;
-		str_assign_cstr(&config.location, argv[arg_i+1]);
-	}
-	/* Change working dir to what was specified. */
-	if (str_length(&config.location) > 0 &&
-	    chdir(config.location.data) != 0) {
-		log_err("Could not change working directory to %s: %s",
-		    config.location.data, strerror(errno));
-		abort();
-	}
-	/* Read configuration file, then parse command line options because they
-	   take precedence (they will overwrite values read from config). */
+	/* Read configuration file. */
 	read_cfg_file();
-	parse_cmd_opt(argc, argv);
 
 	/* Allocate memory for pools & set atexit() which will free them. */
 	setup_memory();
 	atexit(cleanup);
 
 	/* Print game name and version. */
-        cfg_get_str("name", &config.name);
+	cfg_get_str("name", &config.name);
 	cfg_get_str("version", &config.version);
 	log_msg("%s version: %s", config.name.data, config.version.data);
 
 	/* Print SDL version. */
 	SDL_version sdl_version;
-        SDL_GetVersion(&sdl_version);
+	SDL_GetVersion(&sdl_version);
 	log_msg("SDL version: %u.%u.%u", sdl_version.major, sdl_version.minor, sdl_version.patch);
 
 	/* Initialize SDL. */
@@ -317,8 +299,9 @@ int main(int argc, char *argv[])
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	/*glEnable(GL_MULTISAMPLE);*/
-	/*glEnable(GL_CULL_FACE);	 Discard back-facing polygons. */
+	glEnableClientState(GL_VERTEX_ARRAY); // Enable vertex arrays
+	glEnableClientState(GL_COLOR_ARRAY); // Enable color arrays
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	/* No fancy alignment: we want our bytes packed tight. */
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -355,7 +338,7 @@ int main(int argc, char *argv[])
 	remaindr = 0;		/* Used in game time calculations. */
 	before = fps_time = SDL_GetTicks();
 	fps_count = 0;
-        emscripten_set_main_loop(game_loop, 0, 1);
+	emscripten_set_main_loop(game_loop, 0, 1);
 	return 0;
 }
 
@@ -436,20 +419,16 @@ draw_visible_tiles(Camera *cam, World *world, BB *visible_area)
 	/* Sort tiles by depth, so drawing happens back to front. */
 	qsort(visible_tiles, num_tiles, sizeof(QTreeObject *), tile_depth_cmp);
 
-	/* Draw visible tiles. */
-	glBegin(GL_QUADS);
 	for (i = 0; i < num_tiles; i++) {
 		tile = visible_tiles[i]->ptr;
 		assert(tile->objtype == OBJTYPE_TILE);
 
 		/* The tile should not have been added to tree if it has no
 		   sprites. */
-		assert(tile->sprite_list != NULL &&
-		    tile->sprite_list->num_frames > 0);
+		assert(tile->sprite_list != NULL && tile->sprite_list->num_frames > 0);
 
 		draw_tile(cam, tile);
 	}
-	glEnd();
 }
 
 static void
@@ -518,10 +497,10 @@ draw(Camera *cam)
 
 	/* Visible area bounding box. */
 	bb_init(&visible_area,
-	    round(cam->body.pos.x) - visible_halfsize.x,
-	    round(cam->body.pos.y) - visible_halfsize.y,
-	    round(cam->body.pos.x) + visible_halfsize.x,
-	    round(cam->body.pos.y) + visible_halfsize.y);
+		round(cam->body.pos.x) - visible_halfsize.x,
+		round(cam->body.pos.y) - visible_halfsize.y,
+		round(cam->body.pos.x) + visible_halfsize.x,
+		round(cam->body.pos.y) + visible_halfsize.y);
 
 	/* Draw background-color quad. */
 	if (world->bg_color[3] > 0.0)	/* If visible (alpha > 0) */
@@ -664,38 +643,6 @@ exec_key_binding(lua_State *L, SDL_Keysym key, int state)
 }
 
 /*
- * Parse command line options.
- */
-static void
-parse_cmd_opt(int argc, char *argv[])
-{
-	int opt;
-	extern int opterr;
-	extern char *optarg;
-
-	opterr = 0;	/* Disable getopt_bsd() error reporting. */
-	while ((opt = getopt_bsd(argc, argv, "fwL:")) != -1) {
-		switch (opt) {
-		case 'f':
-			config.fullscreen = 1;
-			break;
-		case 'w':
-			config.fullscreen = 0;
-			break;
-		case 'L':
-			str_assign_cstr(&config.location, optarg);
-			break;
-		default:
-			log_msg("Usage: %s [-f] [-w] [-L app_location]", argv[0]);
-			log_msg("\t-w\tRun in windowed mode.");
-			log_msg("\t-f\tRun in fullscreen mode.");
-			log_msg("\t-L\tPath to application directory.");
-			exit(EXIT_FAILURE);
-		}
-	}
-}
-
-/*
  * Read configuration file.
  */
 static void
@@ -758,36 +705,36 @@ game_window()
 	SDL_GetDesktopDisplayMode(0, &display);
 
 	/* Create window. */
-        uint32_t flags = SDL_WINDOW_OPENGL;
-        SDL_Window *win = SDL_CreateWindow("Lariad", SDL_WINDOWPOS_CENTERED,
-                                           SDL_WINDOWPOS_CENTERED,
-                                           config.window_width,
-                                           config.window_height, flags);
-        if (win == NULL)
-                fatal_error("SDL_CreateWindow() failed: %s.", SDL_GetError());
-        SDL_ShowWindow(win);
-        SDL_DisableScreenSaver();
+	uint32_t flags = SDL_WINDOW_OPENGL;
+	SDL_Window *win = SDL_CreateWindow("Lariad", SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		config.window_width,
+		config.window_height, flags);
+	if (win == NULL)
+			fatal_error("SDL_CreateWindow() failed: %s.", SDL_GetError());
+	SDL_ShowWindow(win);
+	SDL_DisableScreenSaver();
 	SDL_ShowCursor(SDL_DISABLE);
 
 	/* Create OpenGL context. */
-        SDL_GLContext context = SDL_GL_CreateContext(win);
-        if (context == NULL) {
-                fatal_error("Could not create OpenGL context: %s",
-                            SDL_GetError());
-        }
-        SDL_GL_MakeCurrent(win, context);
+	SDL_GLContext context = SDL_GL_CreateContext(win);
+	if (context == NULL) {
+			fatal_error("Could not create OpenGL context: %s",
+						SDL_GetError());
+	}
+	SDL_GL_MakeCurrent(win, context);
 
 	int r, g, b, a;
-        SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &r);
-        SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &g);
-        SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &b);
-        SDL_GL_GetAttribute(SDL_GL_ALPHA_SIZE, &a);
-        log_msg("OpenGL platform: %s, %s, %s", glGetString(GL_RENDERER),
-                glGetString(GL_VENDOR), glGetString(GL_VERSION));
-        log_msg("Framebuffer component sizes (RGBA): %d %d %d %d", r, g, b, a);
-        if (a == 0)
-                log_warn("Missing framebuffer alpha.");
-	
+	SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &r);
+	SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &g);
+	SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &b);
+	SDL_GL_GetAttribute(SDL_GL_ALPHA_SIZE, &a);
+	log_msg("OpenGL platform: %s, %s, %s", glGetString(GL_RENDERER),
+			glGetString(GL_VENDOR), glGetString(GL_VERSION));
+	log_msg("Framebuffer component sizes (RGBA): %d %d %d %d", r, g, b, a);
+	if (a == 0)
+			log_warn("Missing framebuffer alpha.");
+
 	return win;
 }
 
