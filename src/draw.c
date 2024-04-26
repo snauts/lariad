@@ -86,12 +86,12 @@ static inline void draw_sprite(Tile *tile, const Camera *cam) {
 	TL = vect_f_add(TL, obj_pos);
 
 	GLfloat colors[] = {
-		1.0f, 1.0f, 1.0f, 1.0f,  // White
-		1.0f, 1.0f, 1.0f, 1.0f,  // White
-		1.0f, 1.0f, 1.0f, 1.0f,  // White
-		1.0f, 1.0f, 1.0f, 1.0f   // White
+		1.0f, 1.0f, 1.0f, // White
+		1.0f, 1.0f, 1.0f, // White
+		1.0f, 1.0f, 1.0f, // White
+		1.0f, 1.0f, 1.0f, // White
 	};
-	glColorPointer(4, GL_FLOAT, 0, colors);
+	glColorPointer(3, GL_FLOAT, 0, colors);
 
 	GLfloat vertices[] = {
 		BL.x, BL.y,

@@ -11,6 +11,7 @@
 #include "misc.h"
 #include "world.h"
 #include "utlist.h"
+#include "framebuffer.h"
 
 extern Config config;
 Console console;
@@ -618,20 +619,6 @@ HideCursor(lua_State *L)
 }
 
 /*
- * SwitchFramebuffer()
- *
- * Start drawing in other framebuffer.
- */
-static int
-SwitchFramebuffer(lua_State *L)
-{
-	extern void switch_framebuffer(void);
-	L_numarg_check(L, 0);
-	switch_framebuffer();
-	return 0;
-}
-
-/*
  * FadeFramebuffer()
  *
  * Fade to new framebuffer
@@ -639,9 +626,9 @@ SwitchFramebuffer(lua_State *L)
 static int
 FadeFramebuffer(lua_State *L)
 {
-	extern void fade_to_other_framebuffer(int);
 	L_numarg_check(L, 1);
 	luaL_checktype(L, 1, LUA_TNUMBER);
+	log_msg("Fade to other framebuffer %i", lua_tonumber(L, 1));
 	fade_to_other_framebuffer(lua_tonumber(L, 1));
 	return 0;
 }
@@ -3857,7 +3844,6 @@ eapi_register(lua_State *L, int audio_enabled)
 	EAPI_ADD_FUNC(L, eapi_index, "IsValidShape", IsValidShape);
 	EAPI_ADD_FUNC(L, eapi_index, "ShowCursor", ShowCursorFunc);
 	EAPI_ADD_FUNC(L, eapi_index, "HideCursor", HideCursor);
-	EAPI_ADD_FUNC(L, eapi_index, "SwitchFramebuffer", SwitchFramebuffer);
 	EAPI_ADD_FUNC(L, eapi_index, "FadeFramebuffer", FadeFramebuffer);
 	
 	/* Sound. */

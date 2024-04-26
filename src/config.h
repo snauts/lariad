@@ -5,8 +5,6 @@
 
 /* Cached configuration (mostly read from config.lua). */
 typedef struct {
-	int	fullscreen;
-	
 	uint	FPSUpdateInterval;
 	int	gameSpeed;
 	uint32_t defaultShapeColor;
@@ -20,7 +18,6 @@ typedef struct {
 	uint	window_height;
 	/* top, bottom, left, right corner of drawable window */
 	float	w_t, w_b, w_l, w_r;
-	uint	screen_bpp;
 	int	force_native;
 } Config;
 

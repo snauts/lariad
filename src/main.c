@@ -24,6 +24,7 @@
 #include "physics.h"
 #include "world.h"
 #include "str.h"
+#include "framebuffer.h"
 
 static SDL_Window *win;
 
@@ -39,6 +40,7 @@ static void	process_events();
 static void	exec_key_binding(lua_State *L, SDL_Keysym key, int state);
 static void	read_cfg_file();
 static SDL_Window *game_window();
+static void calculate_screen_dimensions(void);
 
 World	*worlds[WORLDS_MAX];	/* Pointers to all worlds are stored here. */
 Camera	*cameras[CAMERAS_MAX];	/* Pointers to all cameras are stored here. */
@@ -97,15 +99,10 @@ error_handler(lua_State *L)
 	return 1;
 }
 
-void bind_framebuffer(void);
-void draw_framebuffer(void);
-void cleanup_framebuffer(void);
-
 static SDL_Joystick *joystick[MAX_JOYSTICKS];
 
 static uint32_t now, before, delta_time, game_delta_time, remaindr;
 static int steps_per_frame, fps_count, world_i, cam_i, sound_works, i;
-static int fb_support = 0;
 static World *world;
 
 static void
@@ -211,19 +208,13 @@ game_loop() {
 	* before anything is rendered isn't necessary, but may be done
 	* here if desired.
 	*/
-	if (fb_support) {
-		bind_framebuffer();
-	}
-	else {
-		glClearColor(0.0, 0.0, 0.0, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
+	bind_framebuffer();
 	for (cam_i = 0; cam_i < CAMERAS_MAX; cam_i++) {
 		if (cameras[cam_i] != NULL)
 			draw(cameras[cam_i]);
 	}
+	draw_framebuffer();
 
-	if (fb_support) draw_framebuffer();
 	/*
 	* These may be executed here, but don't seem to do much.
 	* glFlush();
@@ -277,6 +268,10 @@ int main()
 	sound_works = audio_init();
 	win = game_window();
 
+	config.screen_width = config.window_width;
+	config.screen_height = config.window_height;
+	calculate_screen_dimensions();
+
 	for(i = 0; i < MAX_JOYSTICKS; i++) {
 		joystick[i] = NULL;
 	}
@@ -295,6 +290,7 @@ int main()
 	glDisable(GL_LIGHTING);
 	glDisable(GL_NORMALIZE);
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_SCISSOR_TEST);
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
@@ -657,7 +653,6 @@ read_cfg_file()
 	 */
 	config.FPSUpdateInterval
 	    = GET_CFG("FPSUpdateInterval", cfg_get_int, 500);
-	config.fullscreen = cfg_get_bool("fullscreen");
 	config.force_native = cfg_get_bool("forceNative");
 	config.gameSpeed = cfg_get_int("gameSpeed");
 	if (cfg_has_field("defaultShapeColor")) {
@@ -671,7 +666,6 @@ read_cfg_file()
 	config.screen_height = GET_CFG("screenHeight", cfg_get_int, 480);
 	config.window_width = cfg_get_int("windowWidth");
 	config.window_height = cfg_get_int("windowHeight");
-	config.screen_bpp = cfg_get_int("screenBPP");
 }
 
 static void calculate_screen_dimensions(void) {
@@ -694,6 +688,7 @@ static void calculate_screen_dimensions(void) {
 		config.w_l = offset;
 		config.w_r = 1.0 - offset;
 	}
+
 }
 
 static SDL_Window *
