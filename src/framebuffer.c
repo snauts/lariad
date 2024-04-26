@@ -92,7 +92,7 @@ void bind_framebuffer(void) {
 	init_framebuffer(1);
 	init_done = 1;
     }
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, fbo_id[fb_to_draw_into]);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id[fb_to_draw_into]);
 }
 
 static void draw_prolog(GLuint texture_id, float alpha) {
@@ -216,7 +216,7 @@ void fade_to_other_framebuffer(int transition_type) {
 
 void draw_framebuffer(void) {
     extern uint bound_texture;
-    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, config.window_width, config.window_height);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
