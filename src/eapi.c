@@ -23,6 +23,12 @@ __Dummy(lua_State *L)
 	return 0;
 }
 
+/* Unbind keys. */
+extern uint key_bind[SDL_NUM_SCANCODES + EXTRA_KEYBIND];
+static void unbind_keys() {
+	memset(key_bind, 0, sizeof(key_bind));
+}
+
 /*
  * What(obj) -> string
  *
@@ -59,7 +65,6 @@ What(lua_State *L)
 static int
 __BindKey(lua_State *L)
 {
-	extern int *key_bind;
 	int func_id, key;
 
 	L_numarg_check(L, 2);
@@ -87,7 +92,6 @@ __BindKey(lua_State *L)
 static int
 GetKeyBindings(lua_State *L)
 {
-	extern int *key_bind;
 	int key;
 	
 	L_numarg_check(L, 0);
@@ -116,15 +120,13 @@ GetKeyBindings(lua_State *L)
 static int
 SetKeyBindings(lua_State *L)
 {
-	extern int *key_bind;
 	int key, func_id;
 	
 	L_numarg_check(L, 1);
 	luaL_checktype(L, 1, LUA_TTABLE);
 	
-	/* Unbind keys. */
-	memset(key_bind, 0, sizeof(uint) * (SDL_NUM_SCANCODES + EXTRA_KEYBIND));
-	
+	unbind_keys();
+
 	lua_pushnil(L);  /* first key */
 	while (lua_next(L, 1) != 0) {
 		/* Get current key and corresponding function ID. */
@@ -3242,7 +3244,6 @@ SelectShape(lua_State *L)
 	return 0;
 }
 
-
 /*
  * __Clear()
  *
@@ -3252,7 +3253,6 @@ SelectShape(lua_State *L)
 static int
 __Clear(lua_State *L)
 {
-	extern int *key_bind;
 	extern mem_pool mp_camera, mp_body, mp_parallax;
 	extern mem_pool mp_group;
 	extern World *worlds[WORLDS_MAX];
@@ -3288,9 +3288,8 @@ __Clear(lua_State *L)
 	texture_free_unused();
 	audio_free_unused();
 
-	/* Unbind keys. */
-	memset(key_bind, 0, sizeof(uint) * (SDL_NUM_SCANCODES + EXTRA_KEYBIND));
-	
+	unbind_keys();
+
 	return 0;
 }
 
