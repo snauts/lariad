@@ -10,7 +10,6 @@ Cfg = {
 	fullscreen	= false,
 	windowWidth	= 800,
 	windowHeight	= 480,
-	screenBPP	= 0,		-- 0 = current bits per pixel.
 	
 	-- Sound.
 	channels	= 16,		-- Number of mixing channels.
