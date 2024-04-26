@@ -21,8 +21,8 @@ body_init(Body *body, World *world, vect_f pos, uint flags)
 	
 	body->pos = pos;
 	body->cPhys = 0;
-	body->vel = (vect_f) { x:0, y:0 };
-	body->gravity = (vect_f) { x:0, y:0 };
+	body->vel = (vect_f) { 0, 0 };
+	body->gravity = (vect_f) { 0, 0 };
 	body->prevstep_pos = pos;
 	body->prevframe_pos = pos;
 	

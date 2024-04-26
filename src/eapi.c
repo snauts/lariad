@@ -1532,6 +1532,7 @@ NewShape(lua_State *L)
 	default:
 		luaL_error(L, "Invalid object type: %s.",
 		    L_objtype_name(*objtype));
+		return 0;
 	}
 	world = body->world;	/* Shorthand for world pointer. */
 	
@@ -2012,6 +2013,7 @@ Animate(lua_State *L)
 	default:
 		luaL_error(L, "Invalid object type (%s).",
 		    L_objtype_name(*objtype));
+		return 0;
 	}
 	
 	luaL_checktype(L, 2, LUA_TNUMBER);
@@ -2664,6 +2666,7 @@ GetTime(lua_State *L)
 	default:
 		luaL_error(L, "Invalid object type: %s.",
 		    L_objtype_name(*objtype));
+		return 0;
 	}
 	L_assert(L, world->killme == 0, "Dying world");
 	
@@ -3059,6 +3062,7 @@ __NewTimer(lua_State *L)
 	default:
 		luaL_error(L, "Invalid object type: %s.",
 		    L_objtype_name(*objtype));
+		return 0;
 	}
 
 	lua_pushlightuserdata(L, timer);
@@ -3651,6 +3655,7 @@ LUA_PauseMusic(lua_State *L)
 {
         L_numarg_check(L, 0);
         audio_music_pause();
+		return 0;
 }
 
 static int
@@ -3658,6 +3663,7 @@ LUA_ResumeMusic(lua_State *L)
 {
         L_numarg_check(L, 0);
         audio_music_resume();
+		return 0;
 }
 
 static uint32_t seed = 1;
