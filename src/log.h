@@ -1,6 +1,10 @@
 #ifndef LOG_H
 #define LOG_H
 
+#include <SDL_opengl.h>
+
+const char* getGLErrorString(GLenum error);
+
 /* No logging for release builds. */
 #ifdef NDEBUG
 
