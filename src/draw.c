@@ -37,14 +37,10 @@ static inline void draw_sprite(Tile *tile, const Camera *cam) {
 	/* Switch texture and blending function if necessary. */
 	if (bound_texture != sprite_list->tex->id ||
 	    blend_func != (tile->flags & TILE_MULTIPLY)) {
-		glEnd();
-		
+
 		/* Switch texture if it differs from currently selected one. */
 		if (bound_texture != sprite_list->tex->id) {
 			glBindTexture(GL_TEXTURE_2D, sprite_list->tex->id);
-			glTexEnvf(GL_TEXTURE_ENV,
-				  GL_TEXTURE_ENV_MODE,
-				  GL_MODULATE);
 			bound_texture = sprite_list->tex->id;
 		}
 		
@@ -53,11 +49,9 @@ static inline void draw_sprite(Tile *tile, const Camera *cam) {
 			if (tile->flags & TILE_MULTIPLY)
 				glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 			else
-				glBlendFunc(GL_SRC_ALPHA,
-					    GL_ONE_MINUS_SRC_ALPHA);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			blend_func = (tile->flags & TILE_MULTIPLY);
 		}
-		glBegin(GL_QUADS);
 	}
 
 	texfrag = sprite_list->frames[tile->frame_index];
@@ -91,47 +85,60 @@ static inline void draw_sprite(Tile *tile, const Camera *cam) {
 	TR = vect_f_add(TR, obj_pos);
 	TL = vect_f_add(TL, obj_pos);
 
+	GLfloat colors[] = {
+		1.0f, 1.0f, 1.0f, 1.0f,  // White
+		1.0f, 1.0f, 1.0f, 1.0f,  // White
+		1.0f, 1.0f, 1.0f, 1.0f,  // White
+		1.0f, 1.0f, 1.0f, 1.0f   // White
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
+
+	GLfloat vertices[] = {
+		BL.x, BL.y,
+		BR.x, BR.y,
+		TR.x, TR.y,
+		TL.x, TL.y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+
 	if (tile->flags & TILE_FLIP_X) {
 		if (tile->flags & TILE_FLIP_Y) {
-			glTexCoord2f(texfrag.r, texfrag.t);
-			glVertex2f(BL.x, BL.y);
-			glTexCoord2f(texfrag.l, texfrag.t);
-			glVertex2f(BR.x, BR.y);
-			glTexCoord2f(texfrag.l, texfrag.b);
-			glVertex2f(TR.x, TR.y);
-			glTexCoord2f(texfrag.r, texfrag.b);
-			glVertex2f(TL.x, TL.y);
+			GLfloat texCoords[] = {
+				texfrag.r, texfrag.t,
+				texfrag.l, texfrag.t,
+				texfrag.l, texfrag.b,
+				texfrag.r, texfrag.b,
+			};
+			glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 		} else {
-			glTexCoord2f(texfrag.r, texfrag.b);
-			glVertex2f(BL.x, BL.y);
-			glTexCoord2f(texfrag.l, texfrag.b);
-			glVertex2f(BR.x, BR.y);
-			glTexCoord2f(texfrag.l, texfrag.t);
-			glVertex2f(TR.x, TR.y);
-			glTexCoord2f(texfrag.r, texfrag.t);
-			glVertex2f(TL.x, TL.y);
+			GLfloat texCoords[] = {
+				texfrag.r, texfrag.b,
+				texfrag.l, texfrag.b,
+				texfrag.l, texfrag.t,
+				texfrag.r, texfrag.t,
+			};
+			glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 		}
 	} else {
 		if (tile->flags & TILE_FLIP_Y) {
-			glTexCoord2f(texfrag.l, texfrag.t);
-			glVertex2f(BL.x, BL.y);
-			glTexCoord2f(texfrag.r, texfrag.t);
-			glVertex2f(BR.x, BR.y);
-			glTexCoord2f(texfrag.r, texfrag.b);
-			glVertex2f(TR.x, TR.y);
-			glTexCoord2f(texfrag.l, texfrag.b);
-			glVertex2f(TL.x, TL.y);
+			GLfloat texCoords[] = {
+				texfrag.l, texfrag.t,
+				texfrag.r, texfrag.t,
+				texfrag.r, texfrag.b,
+				texfrag.l, texfrag.b,
+			};
+			glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 		} else {
-			glTexCoord2f(texfrag.l, texfrag.b);
-			glVertex2f(BL.x, BL.y);
-			glTexCoord2f(texfrag.r, texfrag.b);
-			glVertex2f(BR.x, BR.y);
-			glTexCoord2f(texfrag.r, texfrag.t);
-			glVertex2f(TR.x, TR.y);
-			glTexCoord2f(texfrag.l, texfrag.t);
-			glVertex2f(TL.x, TL.y);
+			GLfloat texCoords[] = {
+				texfrag.l, texfrag.b,
+				texfrag.r, texfrag.b,
+				texfrag.r, texfrag.t,
+				texfrag.l, texfrag.t,
+			};
+			glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 		}
 	}
+	glDrawArrays(GL_QUADS, 0, 4);
 }
 
 void
