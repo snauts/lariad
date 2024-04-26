@@ -9,7 +9,6 @@
 
 extern Config config;
 
-void (*glGenerateMipmap)(GLenum target);
 void (*glGenFramebuffers)(GLsizei n, GLuint *ids);
 void (*glBindFramebuffer)(GLenum target, GLuint framebuffer);
 void (*glFramebufferTexture2D)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
@@ -58,8 +57,6 @@ static void init_framebuffer(int i) {
     glBindTexture(GL_TEXTURE_2D, 0);
 
     /* Get extension function addresses. */
-    glGenerateMipmap = (__typeof__(glGenerateMipmap))
-        SDL_GL_GetProcAddress("glGenerateMipmapEXT");
     glGenFramebuffers = (__typeof__(glGenFramebuffers))
         SDL_GL_GetProcAddress("glGenFramebuffersEXT");
     glBindFramebuffer = (__typeof__(glBindFramebuffer))
