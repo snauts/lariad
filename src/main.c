@@ -644,8 +644,6 @@ exec_key_binding(lua_State *L, SDL_Keysym key, int state)
 static void
 read_cfg_file()
 {
-	float color[4];
-
 	cfg_read("config.lua");
 
 	/*
@@ -656,11 +654,13 @@ read_cfg_file()
 	config.force_native = cfg_get_bool("forceNative");
 	config.gameSpeed = cfg_get_int("gameSpeed");
 	if (cfg_has_field("defaultShapeColor")) {
-	    cfg_get_color("defaultShapeColor", color);
-	    config.defaultShapeColor = color_floatv_to_uint32(color);
+	    cfg_get_color("defaultShapeColor", config.defaultShapeColor);
 	}
 	else {
-	    config.defaultShapeColor = 0xff66cc00;
+	    config.defaultShapeColor[0] = 1.0;
+		config.defaultShapeColor[1] = 0.4;
+		config.defaultShapeColor[2] = 0.8;
+		config.defaultShapeColor[3] = 0.0;
 	}
 	config.screen_width = GET_CFG("screenWidth", cfg_get_int, 800);
 	config.screen_height = GET_CFG("screenHeight", cfg_get_int, 480);
