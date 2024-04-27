@@ -851,7 +851,7 @@ end
 
 -- Wipe engine-side and client-side state and execute a script file.
 local function GoTo(roomName, TransitionFunc, disableESCAPE, fadeEffect)
-	eapi.SwitchFramebuffer()
+	eapi.DrawOffscreen()
 	eapi.Clear()			-- Clear state.
 
 	emptyDummy = { }
