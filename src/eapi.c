@@ -3891,9 +3891,6 @@ eapi_register(lua_State *L, int audio_enabled)
 	EAPI_ADD_INT(L, eapi_index, "ANIM_CLAMP", TILE_ANIM_CLAMP);
 	EAPI_ADD_INT(L, eapi_index, "ANIM_REVERSE", TILE_ANIM_REVERSE);
 	
-	/* Last key index. */
-	EAPI_ADD_INT(L, eapi_index, "SDLK_LAST", SDL_NUM_SCANCODES);
-	
 	/* Load the part of eapi interface that lives in eapi.lua. */
 	if ((luaL_loadfile(L, "eapi.lua") ||
 	    lua_pcall(L, 0, 0, errfunc_index))) {

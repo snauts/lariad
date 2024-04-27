@@ -198,6 +198,7 @@ eapi.ZOOM_IN		= 4
 eapi.ZOOM_OUT		= 5
 
 -- Mouse button IDs.
+eapi.SDLK_LAST = 512 -- SDL_NUM_SCANCODES
 eapi.MOUSE_BUTTON_LEFT		= eapi.SDLK_LAST + 1
 eapi.MOUSE_BUTTON_MIDDLE	= eapi.SDLK_LAST + 2
 eapi.MOUSE_BUTTON_RIGHT		= eapi.SDLK_LAST + 3
