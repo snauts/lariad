@@ -223,6 +223,11 @@ game_loop() {
 	SDL_GL_SwapWindow(win);
 }
 
+EMSCRIPTEN_KEEPALIVE
+void startup() {
+	emscripten_set_main_loop(game_loop, 0, 1);
+}
+
 int main()
 {
 	log_open(NULL);		/* Log output goes to stderr. */
@@ -331,12 +336,28 @@ int main()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	/* Keep identity matrix at the bottom. */
 
-	/* Main loop. */
+	/* Main loop init. */
 	game_time = 0;		/* Game time starts at zero. */
 	remaindr = 0;		/* Used in game time calculations. */
 	before = fps_time = SDL_GetTicks();
 	fps_count = 0;
-	emscripten_set_main_loop(game_loop, 0, 1);
+
+	/*
+	* Synchronize from IndexedDB to Emscripten MEMFS ("saavgaam" file location).
+	* Then callback into C to start the game.
+	*/
+	EM_ASM({
+		FS.mkdir("/savedata");
+		FS.mount(IDBFS, {}, "/savedata");
+		FS.syncfs(true, function (err) {
+			if (err) {
+			console.error("Error mounting filesystem:", err);
+			} else {
+			console.log("Filesystem mounted and synchronized!");
+			Module['_startup']();
+			}
+		});
+	});
 	return 0;
 }
 
