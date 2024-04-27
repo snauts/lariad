@@ -89,9 +89,7 @@ typedef struct Tile_t {
 	int		frame_index;		/* Active frame number. */
 
 	float		angle;			/* rotation angle */
-	uint32_t	color;			/* Tile color, blended with
-						   texture color by GL_MODULATE
-						   texture function. */
+	float		color[4];    	/* Tile color. */
 	
 	/* Simple animation over all sprite list frames is described by the
 	   following variables. */
@@ -144,9 +142,7 @@ typedef struct Parallax_t {
 	SpriteList	*sprite_list;
 	int		frame_index;	/* Active frame number. */
 
-	uint32_t	color;			/* Tile color, blended with
-						   texture color by GL_MODULATE
-						   texture function. */
+	float	color[4];		/* Tile color. */
 	
 	/* Simple animation over all sprite list frames is described by the
 	   following variables. */

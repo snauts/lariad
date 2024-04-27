@@ -34,7 +34,7 @@ parallax_init(Parallax *px, World *world, SpriteList *sprite_list,
 	
 	px->sprite_list = sprite_list;
 	px->frame_index = 0;
-	px->color = 0xFFFFFFFF;
+	px->color[0] = px->color[1] = px->color[2] = px->color[3] = 1.0;
 	px->anim_type = TILE_ANIM_NONE;
 	px->anim_start = 0.0;
 	px->anim_FPS = 0.0;
@@ -166,7 +166,7 @@ parallax_update(Parallax *px, const Camera *cam)
 			tile->anim_type = px->anim_type;
 			tile->anim_start = px->anim_start;
 			tile->anim_FPS = px->anim_FPS;
-			tile->color = px->color;
+			memcpy(tile->color, px->color, sizeof(tile->color));
 		}
 	}
 }
@@ -468,7 +468,7 @@ tile_init(Tile *tile, Body *body, vect_i pos, vect_i size,
 	tile->frame_index = 0;
 	
 	tile->angle = 0.0;
-	tile->color = 0xFFFFFFFF;
+	tile->color[0] = tile->color[1] = tile->color[2] = tile->color[3] = 1.0;
 	
 	tile->anim_type = TILE_ANIM_NONE;
 	tile->anim_start = 0.0;

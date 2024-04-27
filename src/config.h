@@ -7,8 +7,8 @@
 typedef struct {
 	uint	FPSUpdateInterval;
 	int	gameSpeed;
-	uint32_t defaultShapeColor;
-        String  name;           /* Game name. */
+	float defaultShapeColor[4];
+	String  name;       /* Game name. */
 	String	version;	/* Game version. */
 	String	location;	/* User application location path. */
 	

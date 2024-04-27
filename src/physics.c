@@ -47,7 +47,7 @@ shape_init(Shape *s)
 	s->shape_type = 0;
 	memset(&s->shape, 0, sizeof(s->shape));
 	s->body = NULL;
-	s->color = 0;
+	s->color[0] = s->color[1] = s->color[2] = s->color[3] = 0.0;
 	s->flags = 0;
 	s->prev = s->next = NULL;
 	qtree_obj_init(&s->go, s);		/* Ready for quad tree. */

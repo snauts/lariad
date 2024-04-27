@@ -928,9 +928,7 @@ set_shape_attr(lua_State *L)
 	s = lua_touserdata(L, 1);
 	lua_getfield(L, 2, "color");
 	if (!lua_isnil(L, -1)) {
-		float color[4];
-		L_getstk_color(L, -1, color);
-		s->color = color_floatv_to_uint32(color);
+		L_getstk_color(L, -1, s->color);
 	}
 	return 0;
 }
@@ -1035,9 +1033,7 @@ set_tile_attr(lua_State *L)
 	}
 	lua_getfield(L, 2, "color");
 	if (!lua_isnil(L, -1)) {
-		float color[4];
-		L_getstk_color(L, -1, color);
-		tile->color = color_floatv_to_uint32(color);
+		L_getstk_color(L, -1, tile->color);
 	}
 	return 0;
 }
@@ -1077,9 +1073,7 @@ set_parallax_attr(lua_State *L)
 		px->depth = lua_tonumber(L, -1);
 	lua_getfield(L, 2, "color");
 	if (!lua_isnil(L, -1)) {
-		float color[4];
-		L_getstk_color(L, -1, color);
-		px->color = color_floatv_to_uint32(color);
+		L_getstk_color(L, -1, px->color);
 	}
 	return 0;
 }
@@ -1118,9 +1112,7 @@ SetAttributes(lua_State *L)
 	/* NOTREACHED */
 }
 
-static void push_color(lua_State *L, uint32_t ucolor) {
-	float color[4];
-	color_uint32_to_floatv(ucolor, color);
+static void push_color(lua_State *L, float color[4]) {
 	lua_createtable(L, 0, 4);
 	lua_pushnumber(L, color[0]);	/* Red. */
 	lua_setfield(L, -2, "r");
@@ -1555,7 +1547,7 @@ NewShape(lua_State *L)
 	s->group = group->id;	/* Assign group ID to shape. */
 	
 	/* Set default attribute values. */
-	s->color = config.defaultShapeColor;
+	memcpy(s->color, config.defaultShapeColor, sizeof(s->color));
 #if 0
 	if (!lua_isnoneornil(L, 5)) {
 		/* Call SetAttributes() with the specified attributes. */

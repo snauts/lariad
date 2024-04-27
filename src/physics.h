@@ -33,7 +33,7 @@ typedef struct Shape_t {
 		Circle circle;
 	} shape;
 
-	uint32_t	color;		/* Color for display in shape editor. */
+	float		color[4];		/* Color for display in shape editor. */
 	uint		flags;
 	
 	uint		group;		/* Collision group ID. */

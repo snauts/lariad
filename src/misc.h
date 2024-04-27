@@ -34,8 +34,4 @@ float	minf(int n, ...);
 float	maxf(int n, ...);
 int	float_eq(float a, float b, float epsilon);
 
-/* Color int <--> (float array) conversion. */
-uint32_t color_floatv_to_uint32(float color[4]);
-void	color_uint32_to_floatv(uint32_t in, float out[4]);
-
 #endif /* MISC_H */

@@ -46,10 +46,11 @@ static inline void draw_sprite(Tile *tile, const Camera *cam) {
 		
 		/* Switch blending if it differs from the current one. */
 		if (blend_func != (tile->flags & TILE_MULTIPLY)) {
-			if (tile->flags & TILE_MULTIPLY)
+			if (tile->flags & TILE_MULTIPLY) {
 				glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-			else
+			} else {
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			}
 			blend_func = (tile->flags & TILE_MULTIPLY);
 		}
 	}
@@ -86,10 +87,10 @@ static inline void draw_sprite(Tile *tile, const Camera *cam) {
 	TL = vect_f_add(TL, obj_pos);
 
 	GLfloat colors[] = {
-		1.0f, 1.0f, 1.0f, 1.0f,  // White
-		1.0f, 1.0f, 1.0f, 1.0f,  // White
-		1.0f, 1.0f, 1.0f, 1.0f,  // White
-		1.0f, 1.0f, 1.0f, 1.0f   // White
+		tile->color[0], tile->color[1], tile->color[2], tile->color[3],
+		tile->color[0], tile->color[1], tile->color[2], tile->color[3],
+		tile->color[0], tile->color[1], tile->color[2], tile->color[3],
+		tile->color[0], tile->color[1], tile->color[2], tile->color[3],
 	};
 	glColorPointer(4, GL_FLOAT, 0, colors);
 
@@ -235,7 +236,7 @@ draw_shape(const Shape *s)
 	if (s->flags & SHAPE_INTERSECT)
 		glColor4f(1.0, 0.0, 0.0, 0.5);
 	else
-		glColor4ubv((uchar *)&s->color);
+		glColor4fv(s->color);
 	
 	switch (s->shape_type) {
 	case SHAPE_RECTANGLE: {		
@@ -280,9 +281,6 @@ draw_tile(const Camera *cam, Tile *tile)
 	tile_update_frameindex(tile);
 	
 	if (tile->hidden) return;
-
-	/* Set tile color. */
-	glColor4ubv((uchar *)&tile->color);
 
 	/* If there are no attachments, draw the sprite and bail out. */
 	draw_sprite(tile, cam);

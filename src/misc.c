@@ -288,38 +288,4 @@ float_eq(float a, float b, float epsilon)
 	return 0;
 }
 
-uint32_t
-color_floatv_to_uint32(float color[4])
-{
-	uint32_t c;
-	
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	c = ((uint32_t)(color[0]*255.0) << 24);
-	c |= ((uint32_t)(color[1]*255.0) << 16);
-	c |= ((uint32_t)(color[2]*255.0) << 8);
-	c |= ((uint32_t)(color[3]*255.0) << 0);
-#else
-	c = ((uint32_t)(color[3]*255.0) << 24);
-	c |= ((uint32_t)(color[2]*255.0) << 16);
-	c |= ((uint32_t)(color[1]*255.0) << 8);
-	c |= ((uint32_t)(color[0]*255.0) << 0);
-#endif
-	return c;
-}
-
-void
-color_uint32_to_floatv(uint32_t in, float out[4])
-{
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	out[0] = ((in & 0xFF000000) >> 24) / 255.0;
-	out[1] = ((in & 0x00FF0000) >> 16) / 255.0;
-	out[2] = ((in & 0x0000FF00) >> 8) / 255.0;
-	out[3] = ((in & 0x000000FF) >> 0) / 255.0;
-#else
-	out[3] = ((in & 0xFF000000) >> 24) / 255.0;
-	out[2] = ((in & 0x00FF0000) >> 16) / 255.0;
-	out[1] = ((in & 0x0000FF00) >> 8) / 255.0;
-	out[0] = ((in & 0x000000FF) >> 0) / 255.0;
-#endif
-}
 
