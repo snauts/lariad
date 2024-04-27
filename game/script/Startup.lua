@@ -26,7 +26,7 @@ local function LoadGame()
 end
 
 local function Quit()
-	eapi.SwitchFramebuffer()
+	eapi.DrawOffscreen()
 	Occlusion.put('f', -400, -240, 1000, {size = {800, 480}}, camera.ptr)
 	eapi.FadeFramebuffer(eapi.CROSSFADE)
 	eapi.AddTimer(staticBody, 1.0, eapi.Quit)
