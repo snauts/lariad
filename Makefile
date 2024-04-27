@@ -18,7 +18,7 @@ public/index.html: $(OBJ)
 	emcc -g -o $@ --preload-file game@/ --use-preload-plugins $^ \
 		-sALLOW_MEMORY_GROWTH -sLEGACY_GL_EMULATION \
 		--use-port=sdl2 --use-port=sdl2_mixer --use-port=sdl2_image:formats=png \
-		-s "STACK_SIZE=104857600" \
+		-s "STACK_SIZE=524288" \
 		-Llua-5.1/src -llua -lidbfs.js
 	TIMESTAMP=`date +%s`; \
 		sed -i "s/index\.js/index.js?v=$$TIMESTAMP/g" public/index.html; \
