@@ -4,6 +4,7 @@
 #include "game2d.h"
 #include "physics.h"
 
+void    draw(Camera *cam);
 void	draw_qtree(const QTree *tree);
 void	draw_point(vect_f p);
 void	draw_shape(const Shape *s);

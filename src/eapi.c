@@ -12,6 +12,7 @@
 #include "world.h"
 #include "utlist.h"
 #include "framebuffer.h"
+#include "draw.h"
 
 extern Config config;
 Console console;
@@ -3644,6 +3645,25 @@ LUA_ResumeMusic(lua_State *L)
 		return 0;
 }
 
+static int
+LUA_DrawOffscreen(lua_State *L) {
+	L_numarg_check(L, 0);
+	extern GLuint offscreen_framebuffer;
+	extern Camera *cameras[CAMERAS_MAX];
+	extern void (*glBindFramebuffer)(GLenum target, GLuint framebuffer);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, offscreen_framebuffer);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+	for (int cam_i = 0; cam_i < CAMERAS_MAX; cam_i++) {
+		if (cameras[cam_i] != NULL)
+			draw(cameras[cam_i]);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	return 0;
+}
+
 static uint32_t seed = 1;
 
 /*
@@ -3836,7 +3856,9 @@ eapi_register(lua_State *L, int audio_enabled)
 	EAPI_ADD_FUNC(L, eapi_index, "IsValidShape", IsValidShape);
 	EAPI_ADD_FUNC(L, eapi_index, "ShowCursor", ShowCursorFunc);
 	EAPI_ADD_FUNC(L, eapi_index, "HideCursor", HideCursor);
+
 	EAPI_ADD_FUNC(L, eapi_index, "FadeFramebuffer", FadeFramebuffer);
+	EAPI_ADD_FUNC(L, eapi_index, "DrawOffscreen", LUA_DrawOffscreen);
 	
 	/* Sound. */
 	if (audio_enabled) {

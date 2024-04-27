@@ -23,9 +23,7 @@ enum {
     ZOOM_OUT,
 };
 
-static GLuint main_framebuffer;
-static GLuint offscreen_framebuffer;
-static GLuint main_fb_texture_id;
+GLuint offscreen_framebuffer;
 static GLuint offscreen_fb_texture_id;
 
 /*
@@ -35,20 +33,13 @@ static GLuint offscreen_fb_texture_id;
 static float fb_texture_s;
 static float fb_texture_t;
 
-static void init_framebuffers() {
+void init_framebuffers() {
     uint fb_texture_w = nearest_pow2(config.screen_width);
     uint fb_texture_h = nearest_pow2(config.screen_height);
     fb_texture_s = (float)config.screen_width / fb_texture_w;
     fb_texture_t = (float)config.screen_height / fb_texture_h;
 
     /* generate texture for main and offscreen framebuffers */
-    glGenTextures(1, &main_fb_texture_id);
-    glBindTexture(GL_TEXTURE_2D, main_fb_texture_id);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, fb_texture_w, fb_texture_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     glGenTextures(1, &offscreen_fb_texture_id);
     glBindTexture(GL_TEXTURE_2D, offscreen_fb_texture_id);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -69,15 +60,6 @@ static void init_framebuffers() {
 	glDeleteFramebuffers = (__typeof__(glDeleteFramebuffers))
 		SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
     }
-
-    /* generate main framebuffer */
-    glGenFramebuffers(1, &main_framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, main_framebuffer);
-    glFramebufferTexture2D(GL_FRAMEBUFFER,
-			      GL_COLOR_ATTACHMENT0,
-			      GL_TEXTURE_2D, main_fb_texture_id, 0);
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
 
     /* generate offscreen framebuffer */
     glGenFramebuffers(1, &offscreen_framebuffer);
@@ -143,24 +125,20 @@ static float gain(float x, float q) {
 }
 
 static void zoom_in(float progress) {
-    draw_image(main_fb_texture_id, 0, 0, 1.0);
-    draw_scaled(offscreen_fb_texture_id, progress);
+    draw_scaled(offscreen_fb_texture_id, 1.0 + progress);
 }
 
 static void zoom_out(float progress) {
-    draw_image(main_fb_texture_id, 0, 0, 1.0);
     draw_scaled(offscreen_fb_texture_id, (1.0 - progress));
 }
 
 static void slide_sideways(float progress, float dir) {
     progress = gain(progress, 4);
     float width = dir * (config.w_r - config.w_l);
-    draw_image(main_fb_texture_id, 0, 0, 1.0);
     draw_image(offscreen_fb_texture_id, (1.0 - progress) * width, 0, 1.0);
 }
 
 static void crossfade(float progress) {
-    draw_image(main_fb_texture_id, 0, 0, 1.0);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     draw_image(offscreen_fb_texture_id, 0, 0, 1.0 - progress);
 }
@@ -168,8 +146,7 @@ static void crossfade(float progress) {
 static void display_effect(void) {
     float progress = timer_progress(0.5);
     if (progress >= 1.0) {
-	effect_num = JUST_DISPLAY;
-	draw_image(main_fb_texture_id, 0, 0, 1.0);
+        effect_num = JUST_DISPLAY;
     } else {
 	switch (effect_num) {
 	case SLIDE_LEFT:
@@ -196,48 +173,29 @@ void fade_to_other_framebuffer(int transition_type) {
     start_timer();
 }
 
-void bind_framebuffer(void) {
-    static int init_done = 0;
-    if (!init_done) {
-	init_framebuffers();
-	init_done = 1;
-    }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, main_framebuffer);
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void draw_framebuffer(void) {
+void draw_framebuffer_effects(void) {
     extern uint bound_texture;
+    if (effect_num == JUST_DISPLAY) {
+        return;
+    }
     glBindFramebuffer(GL_FRAMEBUFFER, 0); // bind default framebuffer
     glViewport(0, 0, config.window_width, config.window_height);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    /* Reset texture matrix. */
-    glMatrixMode(GL_TEXTURE);
-    glLoadIdentity();
-
+    /* Reset matrices. */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
     glBlendFunc(GL_ONE, GL_ZERO);
 
-    if (effect_num == JUST_DISPLAY) {
-	draw_image(main_fb_texture_id, 0, 0, 1.0);
-    } else {
-	display_effect();
-    }
+    display_effect();
 
     glBindTexture(GL_TEXTURE_2D, 0);
     bound_texture = 0;
 }
 
 void cleanup_framebuffer(void) {
-	glDeleteTextures(1, &main_fb_texture_id);
 	glDeleteTextures(1, &offscreen_fb_texture_id);
-	glDeleteFramebuffers(1, &main_framebuffer);
 	glDeleteFramebuffers(1, &offscreen_framebuffer);
 }

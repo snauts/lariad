@@ -3,8 +3,8 @@
 
 void switch_framebuffer(void);
 void fade_to_other_framebuffer(int transition_type);
-void bind_framebuffer(void);
-void draw_framebuffer(void);
+void init_framebuffers();
+void draw_framebuffer_effects(void);
 void cleanup_framebuffer(void);
 
 #endif

@@ -10,9 +10,205 @@
 #include "misc.h"
 #include "physics.h"
 #include "matrix.h"
+#include "world.h"
 
 uint bound_texture = (uint) -1;
 static uint blend_func = 0;
+
+/*
+ * Depth comparison routine to use with qsort(). Into the screen is the negative
+ * direction, out of the screen -- positive. We want tiles sorted back to front.
+ */
+static int
+tile_depth_cmp(const void *a, const void *b)
+{
+	float a_depth, b_depth;
+	Tile *a_tile, *b_tile;
+	GLuint a_texid, b_texid;
+
+	a_tile = (*(QTreeObject **)a)->ptr;
+	b_tile = (*(QTreeObject **)b)->ptr;
+
+	assert(a != NULL && b != NULL);
+	assert(a_tile != b_tile);
+	assert(a_tile != NULL && a_tile->objtype == OBJTYPE_TILE);
+	assert(b_tile != NULL && b_tile->objtype == OBJTYPE_TILE);
+
+	a_depth = a_tile->depth;
+	b_depth = b_tile->depth;
+
+	/* If the depth values of both tiles are the same, compare their
+	   pointers. This will ensure that overlapping tiles with equal depth
+	   will not flicker due to differing implementations of qsort() or other
+	   factors. */
+	if (a_depth == b_depth) {
+		a_texid = a_tile->sprite_list->tex->id;
+		b_texid = b_tile->sprite_list->tex->id;
+		if (a_texid == b_texid)
+			return (a_tile < b_tile) ? -1 : 1;
+		return a_texid < b_texid ? -1 : 1;
+	}
+
+	return (a_depth < b_depth) ? -1 : 1;
+}
+
+static void
+draw_visible_tiles(Camera *cam, World *world, BB *visible_area)
+{
+	int stat;
+	uint i, num_tiles;
+	Tile *tile;
+	static QTreeObject *visible_tiles[TILES_MAX];
+
+	/* Look up visible tiles. */
+	stat = qtree_lookup(&world->tile_tree, visible_area, visible_tiles,
+	    TILES_MAX, &num_tiles);
+#ifndef NDEBUG
+	if (stat != 0) {
+		log_err("Too many visible tiles.");
+		abort();
+	}
+#endif
+
+	/* Add camera tiles to the list, since those are always visible and not
+	   in quad tree. */
+	for (tile = cam->body.tiles; tile != NULL; tile = tile->next) {
+		assert(num_tiles < TILES_MAX);
+		visible_tiles[num_tiles++] = &tile->go;
+	}
+
+	/* Update parallax tiles and add them to lookup hash as well. */
+	for (i = 0; i < WORLD_PX_PLANES_MAX; i++) {
+		if (world->px_planes[i] == NULL)
+			continue;
+		parallax_update(world->px_planes[i], cam);
+		for (tile = world->px_planes[i]->body.tiles; tile != NULL;
+		    tile = tile->next) {
+			assert(num_tiles < TILES_MAX);
+			visible_tiles[num_tiles++] = &tile->go;
+		}
+	}
+
+	/* Sort tiles by depth, so drawing happens back to front. */
+	qsort(visible_tiles, num_tiles, sizeof(QTreeObject *), tile_depth_cmp);
+
+	for (i = 0; i < num_tiles; i++) {
+		tile = visible_tiles[i]->ptr;
+		assert(tile->objtype == OBJTYPE_TILE);
+
+		/* The tile should not have been added to tree if it has no
+		   sprites. */
+		assert(tile->sprite_list != NULL && tile->sprite_list->num_frames > 0);
+
+		draw_tile(cam, tile);
+	}
+}
+
+static void
+draw_visible_shapes(const World *world, const BB *visible_area)
+{
+	int stat;
+	uint i, num_shapes;
+	Shape *s;
+#define MAX_SHAPES 5000
+	QTreeObject *visible_shapes[MAX_SHAPES];
+
+	/* Look up visible shapes. */
+	stat = qtree_lookup(&world->shape_tree, visible_area, visible_shapes,
+	    MAX_SHAPES, &num_shapes);
+#ifndef NDEBUG
+	if (stat != 0) {
+		log_err("Too many visible shapes.");
+		abort();
+	}
+#endif
+
+	/* Draw visible shapes. */
+	glLineWidth(2.0);
+	glDisable(GL_TEXTURE_2D);
+	for (i = 0; i < num_shapes; i++) {
+		s = visible_shapes[i]->ptr;
+		assert(s->objtype == OBJTYPE_SHAPE);
+		draw_shape(s);
+	}
+	glEnable(GL_TEXTURE_2D);
+}
+
+void
+draw(Camera *cam)
+{
+	Matrix m;
+	Body *bp;
+	BB visible_area;
+	vect_i visible_size, visible_halfsize;
+	World *world;
+	extern int drawShapes, drawTileTree, drawShapeTree, outsideView;
+
+	/* Camera should be bound to exactly one world (the one its body
+	   belongs to. */
+	world = cam->body.world;
+	assert(world != NULL);
+
+	/* Camera viewport. */
+	glViewport(cam->viewport.l, cam->viewport.t,
+	    cam->viewport.r - cam->viewport.l,	/* width */
+	    cam->viewport.b - cam->viewport.t);	/* height */
+
+	/* Visible area projection. */
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	visible_size.x = round(cam->size.x/cam->zoom);
+	visible_size.y = round(cam->size.y/cam->zoom);
+	visible_halfsize.x = visible_size.x/2;
+	visible_halfsize.y = visible_size.y/2;
+	if (!outsideView)
+		glOrtho(-visible_halfsize.x, visible_halfsize.x,
+		    -visible_halfsize.y, visible_halfsize.y, 0.0, 1.0);
+	else
+		glOrtho(-visible_size.x, +visible_size.x,
+		    -visible_size.y, +visible_size.y, 0.0, 1.0);
+	glMatrixMode(GL_MODELVIEW);
+
+	/* Visible area bounding box. */
+	bb_init(&visible_area,
+		round(cam->body.pos.x) - visible_halfsize.x,
+		round(cam->body.pos.y) - visible_halfsize.y,
+		round(cam->body.pos.x) + visible_halfsize.x,
+		round(cam->body.pos.y) + visible_halfsize.y);
+
+	/* Draw background-color quad. */
+	if (world->bg_color[3] > 0.0)	/* If visible (alpha > 0) */
+		draw_quad(cam, &visible_area, world->bg_color);
+
+	draw_visible_tiles(cam, world, &visible_area);
+
+	/* Set modelview matrix according to camera. Since we do this, the
+	   following drawing functions do not take camera position into account.
+	   The transformation is done by OpenGL automatically.
+
+	   When drawing tiles (see code above), however, we consider camera
+	   position because we must draw them pixel-accurate (body/camera
+	   positions are rounded). The stuff below is just for debugging so
+	   we don't really care. */
+	cam_view(cam, &m);
+	glLoadMatrixf(m.val);
+
+	if (drawShapes) {
+		/* Draw axes and all visible shapes. */
+		draw_axes();
+		draw_visible_shapes(world, &visible_area);
+
+		/* Draw points at body positions. */
+		for (bp = world->bodies; bp != NULL; bp = bp->next)
+			draw_point(bp->pos);
+		draw_point(world->static_body.pos);
+	}
+	if (drawTileTree)
+		draw_qtree(&world->tile_tree);
+	if (drawShapeTree)
+		draw_qtree(&world->shape_tree);
+	glLoadIdentity();
+}
 
 static inline void draw_sprite(Tile *tile, const Camera *cam) {
 	TexFrag texfrag;
