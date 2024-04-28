@@ -88,6 +88,7 @@
   </head>
   <body>
     <div id="container">
+      <img id="header" src="header.jpg" alt="Lariad: a space adventure" />
       <h1 id="psychedelic-heading">Adventure awaits</h1>
       <span id="loading">LOADING...</span>
       <div id="canvasContainer">
@@ -112,6 +113,7 @@
             document.getElementById("loading").style.display = "none";
             document.getElementById("psychedelic-heading").style.display =
               "none";
+            document.getElementById("header").style.display = "none";
           } else {
             document.getElementById("loading").innerText = text;
           }
