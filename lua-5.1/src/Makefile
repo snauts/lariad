@@ -8,7 +8,7 @@
 PLAT= none
 
 CC= emcc
-CFLAGS= -g -Wall $(MYCFLAGS)
+CFLAGS= -Oz -Wall $(MYCFLAGS)
 AR= emar rcu
 RANLIB= emranlib
 RM= rm -f
