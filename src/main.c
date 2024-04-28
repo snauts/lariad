@@ -225,6 +225,27 @@ game_loop() {
 
 EMSCRIPTEN_KEEPALIVE
 void startup() {
+	/* Execute user script. */
+	if ((luaL_loadfile(L, "script/first.lua") ||
+	    lua_pcall(L, 0, 0, errfunc_index))) {
+		log_err("[Lua] %s", lua_tostring(L, -1));
+		abort();
+	}
+
+	if (cameras[0] == NULL) {
+		log_err("No camera!");
+		abort();
+	}
+
+	/* Modelview stack. */
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();	/* Keep identity matrix at the bottom. */
+
+	/* Main loop init. */
+	game_time = 0;		/* Game time starts at zero. */
+	remaindr = 0;		/* Used in game time calculations. */
+	before = fps_time = SDL_GetTicks();
+	fps_count = 0;
 	emscripten_set_main_loop(game_loop, 0, 1);
 }
 
@@ -320,35 +341,13 @@ int main()
 	lua_getfield(L, eapi_index, "__ExecuteKeyBinding");
 	keyfunc_index = lua_gettop(L);
 
-	/* Execute user script. */
-	if ((luaL_loadfile(L, "script/first.lua") ||
-	    lua_pcall(L, 0, 0, errfunc_index))) {
-		log_err("[Lua] %s", lua_tostring(L, -1));
-		abort();
-	}
-
-	if (cameras[0] == NULL) {
-		log_err("No camera!");
-		abort();
-	}
-
-	/* Modelview stack. */
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();	/* Keep identity matrix at the bottom. */
-
-	/* Main loop init. */
-	game_time = 0;		/* Game time starts at zero. */
-	remaindr = 0;		/* Used in game time calculations. */
-	before = fps_time = SDL_GetTicks();
-	fps_count = 0;
-
 	/*
-	* Synchronize from IndexedDB to Emscripten MEMFS ("saavgaam" file location).
+	* Synchronize from IndexedDB to Emscripten MEMFS ("/lariad/setup.lua" file location).
 	* Then callback into C to start the game.
 	*/
 	EM_ASM({
-		FS.mkdir("/savedata");
-		FS.mount(IDBFS, {}, "/savedata");
+		FS.mkdir("/lariad");
+		FS.mount(IDBFS, {}, "/lariad");
 		FS.syncfs(true, function (err) {
 			if (err) {
 			console.error("Error mounting filesystem:", err);
