@@ -3283,7 +3283,10 @@ static int
 Quit(lua_State *L)
 {
 	L_numarg_check(L, 0);
-	exit(EXIT_SUCCESS);
+	EM_ASM(
+		// redirect to webpage root
+		window.location = '/';
+	);
 }
 
 /*
