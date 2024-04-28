@@ -5,7 +5,7 @@
 
 dofile("config.lua")
 dofile("script/util.lua")
-if util.FileExists("setup.lua") then
+if util.FileExists("/savedata/setup.lua") then
 	dofile("setup.lua")
 end
 dofile("script/vector.lua")

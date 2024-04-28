@@ -83,7 +83,7 @@ local function Save(key, keyDown)
 	if keyDown then
 		state.playerPosition = eapi.GetPos(mainPC.body)
 		state.playerDirection = mainPC.direction
-		local f = io.open("saavgaam", "w")
+		local f = io.open("/savedata/saavgaam", "w")
 		if f then
 			f:write("return ")
 			f:write(FormatValue(state))
@@ -94,13 +94,13 @@ local function Save(key, keyDown)
 end
 
 local function HasSaavgaam()
-	return util.FileExists("saavgaam")
+	return util.FileExists("/savedata/saavgaam")
 end
 
 local function Load(key, keyDown)
 	if keyDown then
 		if HasSaavgaam() then
-			state = dofile("saavgaam")
+			state = dofile("/savedata/saavgaam")
 			if not(state.kills) then state.kills = { } end
 			util.GoToAndPlace(state.currentRoom, mainPC,
 			    state.playerPosition, state.playerDirection)
