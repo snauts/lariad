@@ -89,6 +89,7 @@ local function Save(key, keyDown)
 			f:write(FormatValue(state))
 			f:write("\n")
 			io.close(f)
+			eapi.SyncFS()
 		end
 	end
 end

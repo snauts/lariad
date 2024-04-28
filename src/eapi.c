@@ -2,6 +2,7 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <math.h>
+#include <emscripten.h>
 #include "audio.h"
 #include "config.h"
 #include "console.h"
@@ -3664,6 +3665,24 @@ LUA_DrawOffscreen(lua_State *L) {
 	return 0;
 }
 
+
+static int
+LUA_SyncFS(lua_State *L)
+{
+        UNUSED(L);
+		L_numarg_check(L, 0);
+
+        // Synchronize MEMFS back to IndexedDB
+        EM_ASM(
+            FS.syncfs(false, function (err) {
+                if (err) console.error('Error syncing filesystem:', err);
+                else console.log('Data saved to IndexedDB');
+            });
+        );
+
+        return 0;
+}
+
 static uint32_t seed = 1;
 
 /*
@@ -3859,6 +3878,7 @@ eapi_register(lua_State *L, int audio_enabled)
 
 	EAPI_ADD_FUNC(L, eapi_index, "FadeFramebuffer", FadeFramebuffer);
 	EAPI_ADD_FUNC(L, eapi_index, "DrawOffscreen", LUA_DrawOffscreen);
+	EAPI_ADD_FUNC(L, eapi_index, "SyncFS", LUA_SyncFS);
 	
 	/* Sound. */
 	if (audio_enabled) {

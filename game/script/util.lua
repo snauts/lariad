@@ -1090,6 +1090,7 @@ local function SaveSetup()
 		f:write("Cfg.keyJump="..Format(Cfg.keyJump).."\n")
 		f:write("Cfg.keyESC="..Format(Cfg.keyESC).."\n")
 		io.close(f)
+		eapi.SyncFS()
 	end
 end
 
