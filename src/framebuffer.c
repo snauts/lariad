@@ -169,7 +169,7 @@ static void display_effect(void) {
 }
 
 void fade_to_other_framebuffer(int transition_type) {
-    effect_num = transition_type;
+    effect_num = CROSSFADE;
     start_timer();
 }
 

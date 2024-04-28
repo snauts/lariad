@@ -213,7 +213,7 @@ game_loop() {
 			draw(cameras[cam_i]);
 	}
 
-	// draw_framebuffer_effects();
+	draw_framebuffer_effects();
 
 	/*
 	* These may be executed here, but don't seem to do much.
