@@ -1078,7 +1078,7 @@ local function NewGame()
 end
 
 local function SaveSetup()
-	local f = io.open("/savedata/setup.lua", "w")
+	local f = io.open("/lariad/setup.lua", "w")
 	if f then
 		local Format = game.FormatValue
 		f:write("Cfg.texts=\""..Cfg.texts.."\"\n")

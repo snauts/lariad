@@ -5,8 +5,8 @@
 
 dofile("config.lua")
 dofile("script/util.lua")
-if util.FileExists("/savedata/setup.lua") then
-	dofile("setup.lua")
+if util.FileExists("/lariad/setup.lua") then
+	dofile("/lariad/setup.lua")
 end
 dofile("script/vector.lua")
 dofile("script/Effects.lua")
