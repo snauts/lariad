@@ -26,24 +26,13 @@
         height: 480px;
         display: none;
       }
-      #canvasContainer:fullscreen {
+      #canvas:fullscreen {
         cursor: none;
-      }
-      #overlayImage {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        display: none;
       }
       #canvas {
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
         outline: none;
       }
       #fullscreenBtn {
@@ -69,7 +58,7 @@
         outline: none;
         font-family: "Courier New", Courier, monospace;
       }
-      #psychedelic-heading {
+      .heading {
         text-align: center;
         margin: 10px 0;
         font-size: 52px;
@@ -78,7 +67,6 @@
         background-clip: text;
         -webkit-text-fill-color: transparent;
         filter: drop-shadow(2px 2px 2px #222);
-        display: none;
       }
       #loading {
         color: white;
@@ -88,8 +76,10 @@
   </head>
   <body>
     <div id="container">
-      <img id="header" src="header.jpg" alt="Lariad: a space adventure" />
-      <h1 id="psychedelic-heading">Adventure awaits</h1>
+      <h1 id="press-to-start" class="heading">Press button to start</h1>
+      <h1 id="please-wait" class="heading" style="display: none">
+        Adventure awaits
+      </h1>
       <span id="loading">LOADING...</span>
       <div id="canvasContainer">
         <canvas
@@ -97,7 +87,6 @@
           oncontextmenu="event.preventDefault()"
           tabindex="-1"
         ></canvas>
-        <img id="overlayImage" src="crt.png" alt="CRT Overlay" />
       </div>
       <button id="startGameBtn" onclick="startGame();">START GAME</button>
       <button id="fullscreenBtn" onclick="goFullscreen();">FULLSCREEN</button>
@@ -111,9 +100,7 @@
             document.getElementById("canvasContainer").style.display = "inline";
             document.getElementById("fullscreenBtn").style.display = "inline";
             document.getElementById("loading").style.display = "none";
-            document.getElementById("psychedelic-heading").style.display =
-              "none";
-            document.getElementById("header").style.display = "none";
+            document.getElementById("please-wait").style.display = "none";
           } else {
             document.getElementById("loading").innerText = text;
           }
@@ -122,18 +109,15 @@
         monitorRunDependencies: () => {},
       };
       function goFullscreen() {
-        document.getElementById("canvasContainer").requestFullscreen();
+        Module.canvas.requestFullscreen();
       }
-      document.addEventListener("fullscreenchange", () => {
-        document.getElementById("overlayImage").style.display =
-          document.fullscreenElement ? "inline" : "none";
-      });
       function startGame() {
-        document.getElementById('startGameBtn').style.display = 'none';
-        document.getElementById('psychedelic-heading').style.display = 'block';
-        document.getElementById('loading').style.display = 'inline';
-        var script = document.createElement('script');
-        script.src = 'index.js';
+        document.getElementById("startGameBtn").style.display = "none";
+        document.getElementById("press-to-start").style.display = "none";
+        document.getElementById("please-wait").style.display = "block";
+        document.getElementById("loading").style.display = "inline";
+        var script = document.createElement("script");
+        script.src = "index.js";
         document.body.appendChild(script);
       }
     </script>
